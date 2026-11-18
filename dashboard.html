@@ -193,11 +193,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
   <div class="login">
     <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
     <h2>دخول لوحة التحليل</h2>
-    <p>سجّل الدخول بحساب Google المسؤول لعرض النتائج من Firebase، وأدخل كلمة المرور لإضافة النتائج المحفوظة في جدول Google الاحتياطي.</p>
+    <p>هذه الصفحة خاصة بمجلس الطلبة والمعلمين. أدخل كلمة المرور لعرض النتائج.</p>
     <form id="login-form" novalidate>
-      <input type="password" id="pw" placeholder="كلمة مرور الجدول الاحتياطي" autocomplete="current-password">
+      <input type="password" id="pw" placeholder="كلمة المرور" autocomplete="current-password">
       <div class="err" id="login-err"></div>
-      <button class="btn btn-red" id="login-btn" type="submit">دخول بحساب Google</button>
+      <button class="btn btn-red" id="login-btn" type="submit">دخول</button>
     </form>
     <div class="or">أو</div>
     <button class="btn btn-line" id="demo-btn" style="width:100%">عرض بيانات تجريبية</button>
@@ -286,7 +286,8 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
     messagingSenderId: "340498220330",
     appId: "1:340498220330:web:4cd88c04cc774fcd09ca53"
   };
-  const ADMIN_EMAIL = 'yahyahameed2025@gmail.com';
+  // حساب المسؤول في Firebase (يُدخَل بكلمة المرور فقط)
+  const ADMIN_EMAIL = 'admin@national-exams-majlis.web.app';
   const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
 
   const SUBJ = {
@@ -380,12 +381,12 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
   }
   if(FIREBASE_CONFIG.projectId) fbInit().catch(()=>{});
 
-  async function loadFirebase(interactive){
+  async function loadFirebase(pw){
     const { fs, au, db, auth } = await withTimeout(fbInit(), 9000);
     let user = auth.currentUser;
-    if(!user && interactive){ user = (await au.signInWithPopup(auth, new au.GoogleAuthProvider())).user; }
+    if(user && (user.email||'').toLowerCase() !== ADMIN_EMAIL){ await au.signOut(auth); user = null; }
+    if(!user && pw){ user = (await withTimeout(au.signInWithEmailAndPassword(auth, ADMIN_EMAIL, pw), 12000)).user; }
     if(!user) throw new Error('nouser');
-    if((user.email||'').toLowerCase() !== ADMIN_EMAIL) throw new Error('notadmin');
     const snap = await withTimeout(fs.getDocs(fs.collection(db, 'results')), 15000);
     const rows = snap.docs.map(d => { const x = d.data(); return { id:d.id, name:x.name, cls:x.cls, answers:x.answers, time: x.time && x.time.toMillis ? x.time.toMillis() : Date.now(), src:'firebase' }; });
     let key = null;
@@ -394,26 +395,26 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
   }
 
   // يجمع النتائج من Firebase (الأساسي) ومن جدول Google (الاحتياطي) في قائمة واحدة
-  async function loadAll(pw, interactive){
+  async function loadAll(pw){
     const [f, sh] = await Promise.allSettled([
-      FIREBASE_CONFIG.projectId ? loadFirebase(interactive) : Promise.reject(new Error('nofb')),
+      FIREBASE_CONFIG.projectId ? loadFirebase(pw) : Promise.reject(new Error('nofb')),
       (pw && API_URL) ? fetchLive(pw) : Promise.reject(new Error('nopw'))
     ]);
     const fbOk = f.status === 'fulfilled';
     const shOk = sh.status === 'fulfilled' && sh.value && sh.value.ok;
     const shAuth = sh.status === 'fulfilled' && sh.value && sh.value.error === 'auth';
     if(!fbOk && !shOk){
-      const r = f.reason && f.reason.message;
-      if(r === 'notadmin') throw new Error('هذا الحساب ليس حساب المسؤول. سجّل الدخول بـ ' + ADMIN_EMAIL);
-      if(shAuth) throw new Error('كلمة المرور غير صحيحة، وتعذّر الدخول إلى Firebase.');
-      if(f.reason && /popup/i.test(f.reason.code||'')) throw new Error('أُغلقت نافذة تسجيل الدخول. حاول مرة أخرى.');
-      throw new Error('تعذّر جلب النتائج من Firebase ومن الجدول الاحتياطي.');
+      const code = (f.reason && f.reason.code) || '';
+      if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(code) || shAuth) throw new Error('كلمة المرور غير صحيحة.');
+      if(/too-many-requests/.test(code)) throw new Error('محاولات كثيرة خاطئة. انتظر قليلاً ثم حاول مرة أخرى.');
+      if(!pw) throw new Error('أدخل كلمة المرور.');
+      throw new Error('تعذّر الاتصال بقاعدة البيانات وبالجدول الاحتياطي. تحقّق من الإنترنت.');
     }
     let key = (fbOk && f.value.key) || (shOk && sh.value.key) || null;
     if(fbOk && !f.value.key && shOk && sh.value.key){
       try{ await f.value.fs.setDoc(f.value.fs.doc(f.value.db, 'config', 'answerKey'), { key: sh.value.key }); }catch(_){}
     }
-    if(!key) throw new Error('مفتاح الإجابات غير متوفر بعد. أدخل كلمة مرور الجدول مرة واحدة ليُحفظ في Firebase.');
+    if(!key) throw new Error('مفتاح الإجابات غير متوفر حالياً. حاول مرة أخرى بعد قليل.');
     const map = new Map();
     if(fbOk) f.value.rows.forEach(r => map.set(r.id, r));
     let backup = 0;
@@ -422,23 +423,24 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
   }
 
   async function login(pw, interactive){
+    if(interactive && !pw){ $('login-err').textContent = 'أدخل كلمة المرور.'; return; }
     const btn = $('login-btn');
     if(!API_URL && !FIREBASE_CONFIG.projectId){ $('login-err').textContent = 'لم يُضبط الاتصال بعد. استخدم «عرض بيانات تجريبية» للمعاينة.'; return; }
     btn.disabled = true; btn.innerHTML = '<span class="spin"></span> جارٍ الدخول';
     try{
-      const d = await loadAll(pw, interactive);
+      const d = await loadAll(pw);
       password = pw || ''; if(pw && d.status.sheet) ss.set('dash-pw', pw);
       setData(d);
       clearInterval(timer); timer = setInterval(refresh, 60000);
     }catch(e){
       if(interactive) $('login-err').textContent = e.message;
-    }finally{ btn.disabled = false; btn.textContent = 'دخول بحساب Google'; }
+    }finally{ btn.disabled = false; btn.textContent = 'دخول'; }
   }
   async function refresh(){
     if(!DATA) return;
     if(DATA.demo){ toast('هذه بيانات تجريبية'); return; }
     const b = $('refresh'); b.disabled = true;
-    try{ setData(await loadAll(password, false)); }
+    try{ setData(await loadAll(password)); }
     catch(e){ toast('تعذّر التحديث — ' + e.message); }
     finally{ b.disabled = false; }
   }
