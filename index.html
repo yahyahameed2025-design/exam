@@ -405,6 +405,18 @@ footer a{color:var(--red)}
 .reveal.done{transition:transform .3s ease,box-shadow .3s ease,background .3s ease,border-color .3s ease!important;transition-delay:0s!important}
 
 html,body{overflow-x:clip}
+/* ===== انتقال اللغة: خط ضبابي يعبر الشاشة ===== */
+.lang-sweep{position:fixed;top:0;bottom:0;left:0;width:55vw;min-width:280px;z-index:300;pointer-events:none;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent 0%,rgba(180,18,28,.10) 25%,rgba(255,255,255,.28) 50%,rgba(180,18,28,.10) 75%,transparent 100%);
+  -webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(90deg,transparent,#000 30%,#000 70%,transparent)}
+.lang-sweep::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:3px;margin-left:-1.5px;background:linear-gradient(180deg,transparent,#fff 20%,#FFD9A8 50%,#fff 80%,transparent);box-shadow:0 0 18px 4px rgba(255,255,255,.7),0 0 40px 10px rgba(226,58,68,.35)}
+.lang-sweep.to-ltr{animation:sweepLTR 2s cubic-bezier(.65,0,.35,1) forwards}
+.lang-sweep.to-rtl{animation:sweepRTL 2s cubic-bezier(.65,0,.35,1) forwards}
+@keyframes sweepLTR{from{transform:translateX(-100%)}to{transform:translateX(100vw)}}
+@keyframes sweepRTL{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+#view-home,#view-intro{transition:filter 1s cubic-bezier(.65,0,.35,1),opacity 1s cubic-bezier(.65,0,.35,1)}
+body.lang-blur #view-home,body.lang-blur #view-intro{filter:blur(7px);opacity:.55}
 /* ===== زر اللغة ===== */
 .brand-wrap{display:flex;align-items:center;gap:10px;min-width:0}
 .lang-btn{flex:none;min-width:46px;height:32px;padding:0 11px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--red);font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.4px;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s,box-shadow .2s}
@@ -1112,10 +1124,20 @@ html[dir=ltr] .tip-col li:hover{transform:translateX(6px)}
     ['e-name','e-grade'].forEach(id => { $(id).textContent = ''; });
     if(animate){ document.body.classList.remove('lang-anim'); void document.body.offsetWidth; document.body.classList.add('lang-anim'); }
   }
+  let switching = false;
   $('lang-btn').addEventListener('click', () => {
-    LANG = LANG === 'en' ? 'ar' : 'en';
-    try{ localStorage.setItem('bh-ne-lang', LANG); }catch(e){}
-    applyLang(true);
+    if(switching) return;
+    const next = LANG === 'en' ? 'ar' : 'en';
+    const swap = () => { LANG = next; try{ localStorage.setItem('bh-ne-lang', LANG); }catch(e){} applyLang(false); };
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ swap(); return; }
+    switching = true;
+    // خط ضبابي يعبر الشاشة باتجاه قراءة اللغة الجديدة، ويتبدّل المحتوى في منتصف الطريق
+    const band = document.createElement('div');
+    band.className = 'lang-sweep ' + (next === 'en' ? 'to-ltr' : 'to-rtl');
+    document.body.appendChild(band);
+    document.body.classList.add('lang-blur');
+    setTimeout(() => { swap(); document.body.classList.remove('lang-blur'); }, 1000);
+    setTimeout(() => { band.remove(); switching = false; }, 2050);
   });
 
   // ---------- wiring ----------
