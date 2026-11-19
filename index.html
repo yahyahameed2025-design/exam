@@ -178,7 +178,7 @@ footer a{color:var(--red)}
 .intro-info > p{opacity:.92;font-size:1.04rem}
 .rules{list-style:none;margin-top:22px;display:flex;flex-direction:column;gap:10px}
 .rules li{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;font-size:.96rem}
-.rules li b{font-family:"Readex Pro"}
+.rules li b{font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif}
 .rules svg{flex:none;width:22px;height:22px}
 .form{background:#fff;border:1px solid var(--line);border-radius:26px;padding:clamp(24px,4vw,36px);box-shadow:var(--shadow)}
 .form h2{font-size:1.4rem;margin-bottom:4px}
@@ -258,48 +258,225 @@ footer a{color:var(--red)}
 .modal-actions .btn{flex:1}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:120;background:var(--ok);color:#fff;padding:14px 22px;border-radius:14px;font-weight:600;box-shadow:0 14px 30px -10px rgba(0,0,0,.4);display:flex;align-items:center;gap:10px;animation:up .35s ease;max-width:92vw}
 @keyframes up{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* =========================================================
+   طبقة الحركة والتفاعل — بنفس ألوان الموقع
+   ========================================================= */
+.scroll-prog{position:fixed;top:0;right:0;left:0;height:3px;z-index:70;transform-origin:right center;transform:scaleX(0);background:linear-gradient(270deg,var(--red),var(--red-l),var(--gold));pointer-events:none}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s cubic-bezier(.2,.75,.2,1),transform .8s cubic-bezier(.2,.75,.2,1);transition-delay:var(--d,0s);will-change:opacity,transform}
+.reveal.from-r{transform:translateX(48px)}
+.reveal.from-l{transform:translateX(-48px)}
+.reveal.zoom{transform:scale(.9)}
+.reveal.in{opacity:1;transform:none}
+
+/* hero */
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(40px) rotate(3deg);animation:wordUp .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.15s + var(--i)*.12s)}
+@keyframes wordUp{to{opacity:1;transform:none}}
+.hero .eyebrow{animation:dropIn .8s cubic-bezier(.2,.8,.2,1) both}
+.hero p.lead{animation:fadeUp 1s .7s cubic-bezier(.2,.8,.2,1) both}
+.hero-actions{animation:fadeUp 1s .9s cubic-bezier(.2,.8,.2,1) both}
+.stats .stat{animation:fadeUp .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(1.05s + var(--i,0)*.1s);transition:transform .3s,background .3s}
+.stats .stat:hover{transform:translateY(-6px);background:rgba(255,255,255,.18)}
+@keyframes dropIn{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.hero h1 span{background:linear-gradient(100deg,#FFD9A8 0%,#fff 45%,#FFD9A8 60%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4.5s linear infinite}
+@keyframes shine{from{background-position:120% 0}to{background-position:-130% 0}}
+.floaters{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.floaters i{position:absolute;display:block;border:1.5px solid rgba(255,255,255,.28);background:rgba(255,255,255,.05);animation:floaty var(--t,9s) ease-in-out infinite alternate;animation-delay:var(--dl,0s)}
+.floaters i.c{border-radius:50%}
+.floaters i.dm{transform:rotate(45deg);border-radius:6px}
+@keyframes floaty{0%{translate:0 0;rotate:0deg}100%{translate:var(--x,20px) var(--y,-40px);rotate:var(--r,40deg)}}
+.hero .serration{animation:serrBreath 6s ease-in-out infinite}
+@keyframes serrBreath{50%{transform:translateX(-6px)}}
+.scroll-cue{position:absolute;bottom:26px;left:50%;translate:-50% 0;width:26px;height:42px;border:2px solid rgba(255,255,255,.6);border-radius:14px;opacity:.85;animation:fadeUp 1s 1.6s both}
+.scroll-cue::after{content:"";position:absolute;top:7px;left:50%;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:#fff;animation:wheel 1.6s ease-in-out infinite}
+@keyframes wheel{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(14px)}}
+@media(max-width:640px){.scroll-cue{display:none}}
+
+/* nav */
+.links a{position:relative;transition:color .2s,background .2s}
+.links a.on{color:var(--red);background:#FBE9EA}
+.nav{transition:box-shadow .3s,background .3s}
+.nav.scrolled{box-shadow:0 8px 24px -16px rgba(80,10,15,.35)}
+.nav-cta{transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 20px -10px rgba(180,18,28,.8)}
+
+/* section heading underline draw */
+.kicker::before{transform-origin:right;transform:scaleX(0);transition:transform .8s .2s cubic-bezier(.2,.8,.2,1)}
+.reveal.in .kicker::before,.sec-head.in .kicker::before{transform:scaleX(1)}
+
+/* tilt cards */
+.tilt{transform-style:preserve-3d;transition:transform .25s ease,box-shadow .25s ease;position:relative;overflow:hidden}
+.tilt::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.55),transparent 60%)}
+.tilt:hover::after{opacity:1}
+.card .ico,.how-item .ico,.org-row .ico{transition:transform .45s cubic-bezier(.3,1.6,.5,1)}
+.card:hover .ico,.how-item:hover .ico,.org-row:hover .ico{transform:rotate(-10deg) scale(1.15)}
+.card .num{transition:transform .5s cubic-bezier(.2,.8,.2,1),color .4s}
+.card:hover .num{transform:translateY(-4px) scale(1.12);color:#F2CFD1}
+.chip{transition:transform .25s}
+.chip:hover{transform:translateY(-3px) scale(1.04)}
+.grade{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.grade:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.when > div{transition:background .3s}
+.when > div:hover{background:var(--paper)}
+.tip-col li{transition:transform .25s}
+.tip-col li:hover{transform:translateX(-6px)}
+
+/* timeline draw */
+.timeline::before{transform-origin:right center;transform:scaleX(0);transition:transform 1.6s cubic-bezier(.4,0,.2,1)}
+.timeline.in::before{transform:scaleX(1)}
+.tl::before{transform:scale(0);transition:transform .5s cubic-bezier(.3,1.7,.5,1);transition-delay:calc(.3s + var(--i,0)*.35s)}
+.timeline.in .tl::before{transform:scale(1)}
+.timeline.in .tl::before{animation:dotPulse 2.4s calc(1.8s + var(--i,0)*.35s) ease-out infinite}
+@keyframes dotPulse{0%{box-shadow:0 0 0 0 rgba(180,18,28,.45)}70%{box-shadow:0 0 0 12px rgba(180,18,28,0)}100%{box-shadow:0 0 0 0 rgba(180,18,28,0)}}
+
+/* faq */
+.faq details{transition:box-shadow .3s,border-color .3s}
+.faq details:hover{border-color:#E6C9CB}
+.faq details[open]{box-shadow:var(--shadow)}
+.faq details[open] p{animation:fadeUp .45s cubic-bezier(.2,.8,.2,1)}
+
+/* CTA */
+.cta::after{animation:glowMove 7s ease-in-out infinite alternate}
+@keyframes glowMove{to{transform:translate(160px,-60px) scale(1.25)}}
+.cta .big{animation:ctaPulse 2.6s ease-in-out infinite}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.45),0 8px 20px -8px rgba(0,0,0,.35)}50%{box-shadow:0 0 0 14px rgba(255,255,255,0),0 8px 20px -8px rgba(0,0,0,.35)}}
+.mini span{animation:fadeUp .7s both;animation-delay:calc(var(--i,0)*.1s)}
+
+/* buttons ripple + lift */
+.btn{position:relative;overflow:hidden}
+.btn:not([disabled]):hover{transform:translateY(-2px)}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);background:rgba(255,255,255,.45);animation:ripple .65s ease-out forwards;pointer-events:none}
+.btn-line .ripple,.btn-white .ripple{background:rgba(180,18,28,.18)}
+@keyframes ripple{to{transform:scale(4);opacity:0}}
+
+/* back to top */
+.to-top{position:fixed;bottom:22px;left:22px;z-index:50;width:52px;height:52px;border-radius:50%;border:0;background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;color:var(--red);opacity:0;transform:translateY(20px) scale(.8);pointer-events:none;transition:opacity .3s,transform .3s}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+.to-top svg.ring{position:absolute;inset:0;transform:rotate(-90deg)}
+.to-top svg.ring circle{fill:none;stroke:var(--red);stroke-width:3;stroke-linecap:round;stroke-dasharray:151;stroke-dashoffset:151;transition:stroke-dashoffset .1s}
+
+/* page transitions */
+.view-enter{animation:viewIn .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.intro-info{animation:slideR .7s cubic-bezier(.2,.8,.2,1) both}
+.form{animation:slideL .7s .1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes slideR{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+@keyframes slideL{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:none}}
+.rules li{animation:fadeUp .6s both;animation-delay:calc(.35s + var(--i,0)*.1s)}
+.field input,.field select{transition:border .2s,background .2s,box-shadow .2s,transform .2s}
+.field input:focus,.field select:focus{box-shadow:0 0 0 4px rgba(180,18,28,.1)}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+/* exam */
+.qcard{animation:none}
+.qcard.in-next{animation:qNext .45s cubic-bezier(.2,.8,.2,1)}
+.qcard.in-prev{animation:qPrev .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes qNext{from{opacity:0;transform:translateX(-60px) rotate(-1.5deg)}to{opacity:1;transform:none}}
+@keyframes qPrev{from{opacity:0;transform:translateX(60px) rotate(1.5deg)}to{opacity:1;transform:none}}
+.qcard .opt{animation:fadeUp .45s backwards;animation-delay:calc(.08s + var(--i,0)*.07s)}
+.opt{transition:border .2s,background .2s,transform .2s,box-shadow .2s}
+.opt:hover{transform:translateX(-4px)}
+.ltr .opt:hover{transform:translateX(4px)}
+.opt.sel{box-shadow:0 8px 20px -12px rgba(180,18,28,.6)}
+.opt.pop{animation:optPop .4s cubic-bezier(.3,1.7,.5,1)}
+@keyframes optPop{40%{transform:scale(1.03)}100%{transform:none}}
+.opt .k{transition:background .25s,color .25s,transform .35s cubic-bezier(.3,1.7,.5,1)}
+.opt.sel .k{transform:rotate(-8deg) scale(1.1)}
+.progress i{position:relative;overflow:hidden}
+.progress i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);transform:translateX(100%);animation:barShine 1.8s ease-in-out infinite}
+@keyframes barShine{to{transform:translateX(-100%)}}
+.grid button{transition:transform .25s,background .25s,border-color .25s}
+.grid button:not([disabled]):hover{transform:translateY(-3px)}
+.grid button.just{animation:gridPop .45s cubic-bezier(.3,1.7,.5,1)}
+@keyframes gridPop{50%{transform:scale(1.25)}}
+.modal-box{animation:modalIn .4s cubic-bezier(.3,1.5,.5,1)}
+@keyframes modalIn{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:none}}
+.modal-box .ico{animation:icoBounce 1.6s ease-in-out infinite}
+@keyframes icoBounce{50%{transform:translateY(-5px)}}
+.result-card{animation:resultIn .8s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes resultIn{from{opacity:0;transform:scale(.8) rotate(-3deg)}to{opacity:1;transform:none}}
+.result-card .score{display:inline-block;animation:checkSpin 1s .2s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes checkSpin{from{transform:scale(0) rotate(-180deg)}to{transform:none}}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:200}
+/* أثناء الظهور تُستخدم حركة الظهور، وبعدها تعود حركات التفاعل */
+.reveal{transition:opacity .8s cubic-bezier(.2,.75,.2,1),transform .8s cubic-bezier(.2,.75,.2,1)!important;transition-delay:var(--d,0s)!important}
+.reveal.done{transition:transform .3s ease,box-shadow .3s ease,background .3s ease,border-color .3s ease!important;transition-delay:0s!important}
+
+html,body{overflow-x:clip}
+/* ===== زر اللغة ===== */
+.brand-wrap{display:flex;align-items:center;gap:10px;min-width:0}
+.lang-btn{flex:none;min-width:46px;height:32px;padding:0 11px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--red);font-family:"Readex Pro","IBM Plex Sans Arabic",sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.4px;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s,box-shadow .2s}
+.lang-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(180,18,28,.8)}
+.lang-btn:active{transform:scale(.94)}
+body.lang-anim #view-home,body.lang-anim #view-intro,body.lang-anim #view-exam{animation:langSwap .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes langSwap{from{opacity:.25;filter:blur(3px)}to{opacity:1;filter:none}}
+.rtl{direction:rtl;text-align:right}
+
+/* ===== الاتجاه من اليسار لليمين (الإنجليزية) ===== */
+html[dir=ltr] body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}
+html[dir=ltr] .serration{right:auto;left:0;transform:scaleX(-1);animation:none}
+html[dir=ltr] .hero .wrap{padding-right:0;padding-left:clamp(70px,11vw,150px)}
+html[dir=ltr] .hero h1{letter-spacing:-1px}
+html[dir=ltr] .timeline::before{transform-origin:left center}
+html[dir=ltr] .tl::before{right:auto;left:0}
+html[dir=ltr] .kicker::before{transform-origin:left}
+html[dir=ltr] .card .num{left:auto;right:16px}
+html[dir=ltr] .cta::after{left:auto;right:-120px}
+html[dir=ltr] .when > div{border-left:0;border-right:1px solid var(--line)}
+html[dir=ltr] .when > div:last-child{border-right:0}
+@media(max-width:760px){html[dir=ltr] .when > div{border-right:0}}
+html[dir=ltr] .to-top{left:auto;right:22px}
+html[dir=ltr] .scroll-prog{transform-origin:left center;background:linear-gradient(90deg,var(--red),var(--red-l),var(--gold))}
+html[dir=ltr] .tip-col li:hover{transform:translateX(6px)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
+<div class="scroll-prog" id="scroll-prog"></div>
+<canvas id="confetti"></canvas>
+<button class="to-top" id="to-top" aria-label="العودة للأعلى" data-en-aria="Back to top"><svg class="ring" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
 <!-- =================== HOME =================== -->
 <div id="view-home">
-  <div class="credit-bar"><div class="wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.6 5.8 21l1.4-7L2 9.3l7-.8z"/></svg><span>تصميم وإنشاء: <b>مجلس الطلبة</b> <span class="sep">|</span> مدرسة عثمان بن عفان الابتدائية الإعدادية للبنين</span></div></div>
+  <div class="credit-bar"><div class="wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.6 5.8 21l1.4-7L2 9.3l7-.8z"/></svg><span data-en="Designed &amp;amp; built by: &lt;b&gt;Student Council&lt;/b&gt; &lt;span class=&quot;sep&quot;&gt;|&lt;/span&gt; Othman Bin Affan Primary Intermediate School for Boys">تصميم وإنشاء: <b>مجلس الطلبة</b> <span class="sep">|</span> مدرسة عثمان بن عفان الابتدائية الإعدادية للبنين</span></div></div>
   <nav class="nav">
     <div class="wrap">
-      <a href="#top" class="brand">
-        <svg class="flag" viewBox="0 0 30 20"><rect width="30" height="20" fill="#B4121C"/><path d="M0 0h8l4 2-4 2 4 2-4 2 4 2-4 2 4 2-4 2 4 2-4 2H0z" fill="#fff" transform="translate(30,0) scale(-1,1)"/></svg>
-        الاختبارات الوطنية
-      </a>
+      <div class="brand-wrap"><button class="lang-btn" id="lang-btn" type="button" aria-label="Switch language">EN</button><a href="#top" class="brand"><span data-en="National Exams">الاختبارات الوطنية</span></a></div>
       <div class="links">
-        <a href="#about">ما هي؟</a>
-        <a href="#why">أهميتها</a>
-        <a href="#who">الصفوف والمواد</a>
-        <a href="#how">طريقتها</a>
-        <a href="#when">موعدها</a>
-        <a href="#tips">الاستعداد</a>
+        <a href="#about" data-en="What is it?">ما هي؟</a>
+        <a href="#why" data-en="Why it matters">أهميتها</a>
+        <a href="#who" data-en="Grades &amp;amp; subjects">الصفوف والمواد</a>
+        <a href="#how" data-en="How it works">طريقتها</a>
+        <a href="#when" data-en="When">موعدها</a>
+        <a href="#tips" data-en="Get ready">الاستعداد</a>
       </div>
-      <button class="nav-cta" data-go-try>قم بالتجربة</button>
+      <button class="nav-cta" data-go-try data-en="Try it">قم بالتجربة</button>
     </div>
   </nav>
 
   <header class="hero" id="top">
     <svg class="serration" viewBox="0 0 100 500" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M100 0 V500 H0 L40 450 L0 400 L40 350 L0 300 L40 250 L0 200 L40 150 L0 100 L40 50 L0 0 Z" fill="#fff"/>
+      <path d="M100 0 V500 H0 L40 450 L0 400 L40 350 L0 300 L40 250 L0 200 L40 150 L0 100 L40 50 L0 0 Z" fill="#fff"><animate attributeName="d" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M100 0 V500 H0 L40 450 L0 400 L40 350 L0 300 L40 250 L0 200 L40 150 L0 100 L40 50 L0 0 Z;M100 0 V500 H6 L48 452 L4 402 L44 348 L-2 298 L42 252 L6 202 L48 148 L2 98 L44 52 L6 0 Z;M100 0 V500 H0 L40 450 L0 400 L40 350 L0 300 L40 250 L0 200 L40 150 L0 100 L40 50 L0 0 Z"/></path>
     </svg>
     <div class="wrap">
-      <span class="eyebrow">🇧🇭 دليل الطالب الشامل</span>
-      <h1>الاختبارات الوطنية<br>في <span>مملكة البحرين</span></h1>
-      <p class="lead">كل ما تحتاج معرفته عن الاختبارات الوطنية: ما هي، ولماذا هي مهمة، ومن يقدّمها، وكيف تُعقد، ومتى، وكيف تستعد لها جيداً — ثم جرّب بنفسك نموذجاً محاكياً في نهاية الصفحة.</p>
+      <span class="eyebrow" data-en="🇧🇭 The complete student guide">🇧🇭 دليل الطالب الشامل</span>
+      <h1 data-en="National Exams&lt;br&gt;in the &lt;span&gt;Kingdom of Bahrain&lt;/span&gt;">الاختبارات الوطنية<br>في <span>مملكة البحرين</span></h1>
+      <p class="lead" data-en="Everything you need to know about the national exams: what they are, why they matter, who sits them, how and when they are held, and how to prepare well — then try a practice exam yourself at the end of the page.">كل ما تحتاج معرفته عن الاختبارات الوطنية: ما هي، ولماذا هي مهمة، ومن يقدّمها، وكيف تُعقد، ومتى، وكيف تستعد لها جيداً — ثم جرّب بنفسك نموذجاً محاكياً في نهاية الصفحة.</p>
       <div class="hero-actions">
-        <a href="#about" class="btn btn-white">ابدأ القراءة</a>
-        <button class="btn btn-ghost" data-go-try>قم بالتجربة ←</button>
+        <a href="#about" class="btn btn-white" data-en="Start reading">ابدأ القراءة</a>
+        <button class="btn btn-ghost" data-go-try data-en="Try it →">قم بالتجربة ←</button>
       </div>
       <div class="stats">
-        <div class="stat"><b>2009</b><small>أول تطبيق رسمي</small></div>
-        <div class="stat"><b>4</b><small>مواد أساسية</small></div>
-        <div class="stat"><b>9 و 12</b><small>الصفوف المستهدفة حالياً</small></div>
-        <div class="stat"><b>BQA</b><small>الجهة المنفّذة</small></div>
+        <div class="stat" style="--i:0"><b data-count="2009">2009</b><small data-en="First official round">أول تطبيق رسمي</small></div>
+        <div class="stat" style="--i:1"><b data-count="4">4</b><small data-en="Core subjects">مواد أساسية</small></div>
+        <div class="stat" style="--i:2"><b data-en="9 &amp;amp; 12">9 و 12</b><small data-en="Grades tested today">الصفوف المستهدفة حالياً</small></div>
+        <div class="stat" style="--i:3"><b>BQA</b><small data-en="Run by">الجهة المنفّذة</small></div>
       </div>
     </div>
   </header>
@@ -309,32 +486,32 @@ footer a{color:var(--red)}
   <section class="block" id="about">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">ما هي؟</span>
-        <h2>اختبارات موحّدة لكل طلبة المملكة</h2>
-        <p>مقياس وطني مستقل يقيس ما تعلّمه الطالب فعلاً مقارنةً بمعايير المنهج الوطني.</p>
+        <span class="kicker" data-en="What is it?">ما هي؟</span>
+        <h2 data-en="One unified exam for every student in the Kingdom">اختبارات موحّدة لكل طلبة المملكة</h2>
+        <p data-en="An independent national measure of what students have actually learned against the national curriculum standards.">مقياس وطني مستقل يقيس ما تعلّمه الطالب فعلاً مقارنةً بمعايير المنهج الوطني.</p>
       </div>
       <div class="about">
         <div class="txt">
-          <p>الاختبارات الوطنية هي اختبارات <b>موحّدة على مستوى مملكة البحرين</b>، يؤديها جميع طلبة الصف المستهدف في الوقت نفسه وبالأسئلة نفسها، وتُصحَّح بالمعايير نفسها، مما يجعلها مقياساً عادلاً يمكن من خلاله مقارنة الأداء بين المدارس والمناطق.</p>
-          <p>تتولى تنفيذها <b>الإدارة العامة للامتحانات الوطنية</b> التابعة لـ <b>هيئة جودة التعليم والتدريب (BQA)</b>، وهي جهة مستقلة عن المدرسة، فلا يضع المعلم أسئلتها ولا يصححها.</p>
-          <p>انطلقت الاختبارات ضمن مشروع إصلاح التعليم ورؤية البحرين الاقتصادية 2030، وصُمّمت بالتعاون مع جامعة كامبريدج لتكون مبنية على منهج وزارة التربية والتعليم البحريني.</p>
+          <p data-en="The national exams are &lt;b&gt;unified across the Kingdom of Bahrain&lt;/b&gt;: every student in the target grade sits them at the same time, with the same questions, marked to the same standards — making them a fair way to compare performance across schools and regions.">الاختبارات الوطنية هي اختبارات <b>موحّدة على مستوى مملكة البحرين</b>، يؤديها جميع طلبة الصف المستهدف في الوقت نفسه وبالأسئلة نفسها، وتُصحَّح بالمعايير نفسها، مما يجعلها مقياساً عادلاً يمكن من خلاله مقارنة الأداء بين المدارس والمناطق.</p>
+          <p data-en="They are run by the &lt;b&gt;Directorate of National Examinations&lt;/b&gt; at the &lt;b&gt;Education &amp;amp; Training Quality Authority (BQA)&lt;/b&gt;, a body independent of schools — teachers neither set nor mark the questions.">تتولى تنفيذها <b>الإدارة العامة للامتحانات الوطنية</b> التابعة لـ <b>هيئة جودة التعليم والتدريب (BQA)</b>، وهي جهة مستقلة عن المدرسة، فلا يضع المعلم أسئلتها ولا يصححها.</p>
+          <p data-en="The exams were launched as part of Bahrain&#x27;s education reform and Economic Vision 2030, and were designed with Cambridge to be based on the Bahraini Ministry of Education curriculum.">انطلقت الاختبارات ضمن مشروع إصلاح التعليم ورؤية البحرين الاقتصادية 2030، وصُمّمت بالتعاون مع جامعة كامبريدج لتكون مبنية على منهج وزارة التربية والتعليم البحريني.</p>
         </div>
         <div class="org">
           <div class="org-row">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></div>
-            <div><h4>الجهة المسؤولة</h4><p>هيئة جودة التعليم والتدريب — الإدارة العامة للامتحانات الوطنية</p></div>
+            <div><h4 data-en="Responsible body">الجهة المسؤولة</h4><p data-en="Education &amp;amp; Training Quality Authority — Directorate of National Examinations">هيئة جودة التعليم والتدريب — الإدارة العامة للامتحانات الوطنية</p></div>
           </div>
           <div class="org-row">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2zM8 7h6M8 11h6"/></svg></div>
-            <div><h4>المرجع</h4><p>معايير المنهج الوطني لوزارة التربية والتعليم</p></div>
+            <div><h4 data-en="Reference">المرجع</h4><p data-en="National curriculum standards of the Ministry of Education">معايير المنهج الوطني لوزارة التربية والتعليم</p></div>
           </div>
           <div class="org-row">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-            <div><h4>البداية</h4><p>تجربة أولية عام 2008، ثم أول تطبيق رسمي في مايو 2009</p></div>
+            <div><h4 data-en="Beginnings">البداية</h4><p data-en="A pilot in 2008, then the first official round in May 2009">تجربة أولية عام 2008، ثم أول تطبيق رسمي في مايو 2009</p></div>
           </div>
           <div class="org-row">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
-            <div><h4>طبيعتها</h4><p>مستقلة، موحّدة، سرّية، وتُدار بإجراءات أمان صارمة</p></div>
+            <div><h4 data-en="Nature">طبيعتها</h4><p data-en="Independent, unified, confidential, and run under strict security procedures">مستقلة، موحّدة، سرّية، وتُدار بإجراءات أمان صارمة</p></div>
           </div>
         </div>
       </div>
@@ -345,29 +522,29 @@ footer a{color:var(--red)}
   <section class="block alt" id="why">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">أهميتها</span>
-        <h2>لماذا تُعدّ الاختبارات الوطنية مهمة؟</h2>
-        <p>نتيجتك ليست رقماً فقط؛ إنها معلومة تساعد الجميع على تطوير التعليم.</p>
+        <span class="kicker" data-en="Why it matters">أهميتها</span>
+        <h2 data-en="Why do the national exams matter?">لماذا تُعدّ الاختبارات الوطنية مهمة؟</h2>
+        <p data-en="Your result isn&#x27;t just a number — it&#x27;s information that helps everyone improve education.">نتيجتك ليست رقماً فقط؛ إنها معلومة تساعد الجميع على تطوير التعليم.</p>
       </div>
       <div class="cards">
         <div class="card"><span class="num">01</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
-          <h3>تقيس مستواك الحقيقي</h3><p>تكشف مدى إتقانك للمهارات الأساسية مقارنةً بالمعايير الوطنية، لا مقارنةً بزملائك في الصف فقط.</p></div>
+          <h3 data-en="Measures your real level">تقيس مستواك الحقيقي</h3><p data-en="Shows how well you have mastered core skills against national standards — not just against your classmates.">تكشف مدى إتقانك للمهارات الأساسية مقارنةً بالمعايير الوطنية، لا مقارنةً بزملائك في الصف فقط.</p></div>
         <div class="card"><span class="num">02</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M5 8l7-5 7 5M5 8l-2 6h4zM19 8l-2 6h4z"/></svg></div>
-          <h3>عدالة ومساواة</h3><p>الأسئلة نفسها والتصحيح نفسه لكل طلبة المملكة، فتُقارَن النتائج بإنصاف بين المدارس.</p></div>
+          <h3 data-en="Fairness and equality">عدالة ومساواة</h3><p data-en="The same questions and the same marking for every student in the Kingdom, so results are compared fairly across schools.">الأسئلة نفسها والتصحيح نفسه لكل طلبة المملكة، فتُقارَن النتائج بإنصاف بين المدارس.</p></div>
         <div class="card"><span class="num">03</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg></div>
-          <h3>تطوير المدارس</h3><p>تحصل كل مدرسة على تقرير يوضح نقاط القوة والضعف لدى طلبتها، فتبني خطط تحسين دقيقة.</p></div>
+          <h3 data-en="Improving schools">تطوير المدارس</h3><p data-en="Every school receives a report on its students&#x27; strengths and weaknesses, so it can build precise improvement plans.">تحصل كل مدرسة على تقرير يوضح نقاط القوة والضعف لدى طلبتها، فتبني خطط تحسين دقيقة.</p></div>
         <div class="card"><span class="num">04</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4a3.5 3.5 0 0 1 0 7M18 14a5.5 5.5 0 0 1 3.5 6"/></svg></div>
-          <h3>تُطلع أولياء الأمور</h3><p>تمنح الأسرة صورة واضحة عن مستوى ابنها في كل مادة، لتدعمه في المواطن التي يحتاجها.</p></div>
+          <h3 data-en="Keeps parents informed">تُطلع أولياء الأمور</h3><p data-en="Gives families a clear picture of their child&#x27;s level in each subject, so they can support them where needed.">تمنح الأسرة صورة واضحة عن مستوى ابنها في كل مادة، لتدعمه في المواطن التي يحتاجها.</p></div>
         <div class="card"><span class="num">05</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></div>
-          <h3>مهارات لا حفظ</h3><p>تركّز على الفهم والتطبيق وحل المشكلات، وهي المهارات التي ستحتاجها في دراستك وعملك مستقبلاً.</p></div>
+          <h3 data-en="Skills, not memorising">مهارات لا حفظ</h3><p data-en="Focuses on understanding, application and problem solving — the skills you&#x27;ll need in your studies and future career.">تركّز على الفهم والتطبيق وحل المشكلات، وهي المهارات التي ستحتاجها في دراستك وعملك مستقبلاً.</p></div>
         <div class="card"><span class="num">06</span>
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"/></svg></div>
-          <h3>تخدم رؤية 2030</h3><p>تساعد صنّاع القرار على قياس جودة التعليم وطنياً، دعماً لبناء اقتصاد قائم على المعرفة.</p></div>
+          <h3 data-en="Supports Vision 2030">تخدم رؤية 2030</h3><p data-en="Helps decision-makers measure education quality nationally, supporting a knowledge-based economy.">تساعد صنّاع القرار على قياس جودة التعليم وطنياً، دعماً لبناء اقتصاد قائم على المعرفة.</p></div>
       </div>
     </div>
   </section>
@@ -376,38 +553,38 @@ footer a{color:var(--red)}
   <section class="block" id="who">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">الصفوف والمواد</span>
-        <h2>من يقدّم الاختبار؟ وفي أي مواد؟</h2>
-        <p>طُبّقت تدريجياً على الصفوف الثالث والسادس والتاسع والثاني عشر، وتتركّز اليوم على الصفين التاسع والثاني عشر.</p>
+        <span class="kicker" data-en="Grades &amp;amp; subjects">الصفوف والمواد</span>
+        <h2 data-en="Who sits the exam, and in which subjects?">من يقدّم الاختبار؟ وفي أي مواد؟</h2>
+        <p data-en="Introduced gradually for Grades 3, 6, 9 and 12, the exams now focus on Grades 9 and 12.">طُبّقت تدريجياً على الصفوف الثالث والسادس والتاسع والثاني عشر، وتتركّز اليوم على الصفين التاسع والثاني عشر.</p>
       </div>
       <div class="grades">
         <div class="grade main">
-          <span class="tag">نهاية المرحلة الإعدادية</span>
-          <h3>الصف التاسع</h3>
-          <p>يقيس ما اكتسبه الطالب في المواد الأساسية قبل انتقاله إلى المرحلة الثانوية.</p>
+          <span class="tag" data-en="End of intermediate school">نهاية المرحلة الإعدادية</span>
+          <h3 data-en="Grade 9">الصف التاسع</h3>
+          <p data-en="Measures what students have learned in core subjects before moving on to secondary school.">يقيس ما اكتسبه الطالب في المواد الأساسية قبل انتقاله إلى المرحلة الثانوية.</p>
           <div class="subj">
-            <span class="chip"><i class="dot" style="background:#E23A44"></i>اللغة العربية</span>
-            <span class="chip"><i class="dot" style="background:#4C8BF5"></i>اللغة الإنجليزية</span>
-            <span class="chip"><i class="dot" style="background:#F2B233"></i>الرياضيات</span>
-            <span class="chip"><i class="dot" style="background:#2FB37A"></i>العلوم</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#E23A44&quot;&gt;&lt;/i&gt;Arabic"><i class="dot" style="background:#E23A44"></i>اللغة العربية</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#4C8BF5&quot;&gt;&lt;/i&gt;English"><i class="dot" style="background:#4C8BF5"></i>اللغة الإنجليزية</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#F2B233&quot;&gt;&lt;/i&gt;Mathematics"><i class="dot" style="background:#F2B233"></i>الرياضيات</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#2FB37A&quot;&gt;&lt;/i&gt;Science"><i class="dot" style="background:#2FB37A"></i>العلوم</span>
           </div>
         </div>
         <div class="grade">
-          <span class="tag">نهاية المرحلة الثانوية</span>
-          <h3>الصف الثاني عشر</h3>
-          <p>يقيس جاهزية الطالب للتعليم العالي وسوق العمل بمستوى قريب من المعايير الدولية.</p>
+          <span class="tag" data-en="End of secondary school">نهاية المرحلة الثانوية</span>
+          <h3 data-en="Grade 12">الصف الثاني عشر</h3>
+          <p data-en="Measures students&#x27; readiness for higher education and the job market, at a level close to international standards.">يقيس جاهزية الطالب للتعليم العالي وسوق العمل بمستوى قريب من المعايير الدولية.</p>
           <div class="subj">
-            <span class="chip"><i class="dot" style="background:#E23A44"></i>اللغة العربية</span>
-            <span class="chip"><i class="dot" style="background:#4C8BF5"></i>اللغة الإنجليزية</span>
-            <span class="chip"><i class="dot" style="background:#8E5CF0"></i>حل المشكلات</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#E23A44&quot;&gt;&lt;/i&gt;Arabic"><i class="dot" style="background:#E23A44"></i>اللغة العربية</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#4C8BF5&quot;&gt;&lt;/i&gt;English"><i class="dot" style="background:#4C8BF5"></i>اللغة الإنجليزية</span>
+            <span class="chip" data-en="&lt;i class=&quot;dot&quot; style=&quot;background:#8E5CF0&quot;&gt;&lt;/i&gt;Problem Solving"><i class="dot" style="background:#8E5CF0"></i>حل المشكلات</span>
           </div>
         </div>
       </div>
       <div class="timeline">
-        <div class="tl"><b>2008</b><p>تأسيس وحدة الامتحانات الوطنية وتطبيق تجريبي للصفين الثالث والسادس.</p></div>
-        <div class="tl"><b>2009</b><p>أول تطبيق رسمي: نحو 21 ألف طالب في 133 مدرسة حكومية.</p></div>
-        <div class="tl"><b>2009 – 2015</b><p>إدخال الصفين التاسع والثاني عشر على مراحل.</p></div>
-        <div class="tl"><b>اليوم</b><p>اختبارات للصفين التاسع والثاني عشر، مع التوجّه نحو التطبيق الإلكتروني.</p></div>
+        <div class="tl"><b>2008</b><p data-en="National Examinations Unit founded; pilot exams for Grades 3 and 6.">تأسيس وحدة الامتحانات الوطنية وتطبيق تجريبي للصفين الثالث والسادس.</p></div>
+        <div class="tl"><b>2009</b><p data-en="First official round: about 21,000 students in 133 government schools.">أول تطبيق رسمي: نحو 21 ألف طالب في 133 مدرسة حكومية.</p></div>
+        <div class="tl"><b>2009 – 2015</b><p data-en="Grades 9 and 12 added in phases.">إدخال الصفين التاسع والثاني عشر على مراحل.</p></div>
+        <div class="tl"><b data-en="Today">اليوم</b><p data-en="Exams for Grades 9 and 12, moving towards electronic delivery.">اختبارات للصفين التاسع والثاني عشر، مع التوجّه نحو التطبيق الإلكتروني.</p></div>
       </div>
     </div>
   </section>
@@ -416,23 +593,23 @@ footer a{color:var(--red)}
   <section class="block alt" id="how">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">طريقتها</span>
-        <h2>كيف يُعقد الاختبار؟</h2>
-        <p>اختبار منظّم بدقة، من توزيع الأوراق إلى إعلان التقارير.</p>
+        <span class="kicker" data-en="How it works">طريقتها</span>
+        <h2 data-en="How is the exam held?">كيف يُعقد الاختبار؟</h2>
+        <p data-en="A carefully organised exam, from handing out papers to publishing reports.">اختبار منظّم بدقة، من توزيع الأوراق إلى إعلان التقارير.</p>
       </div>
       <div class="how">
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></div>
-          <div><h3>تنوّع الأسئلة</h3><p>أسئلة اختيار من متعدد، وأسئلة إجابة قصيرة، وأسئلة مفتوحة تتطلب شرح طريقة الحل أو الكتابة.</p></div></div>
+          <div><h3 data-en="Varied questions">تنوّع الأسئلة</h3><p data-en="Multiple-choice, short-answer and open questions that ask you to explain your working or write.">أسئلة اختيار من متعدد، وأسئلة إجابة قصيرة، وأسئلة مفتوحة تتطلب شرح طريقة الحل أو الكتابة.</p></div></div>
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
-          <div><h3>ورقي وإلكتروني</h3><p>تُقدَّم بعض الأجزاء على الورق، وتتجه الهيئة إلى تطبيق أجزاء منها إلكترونياً عبر نظام آلي خاص.</p></div></div>
+          <div><h3 data-en="Paper and electronic">ورقي وإلكتروني</h3><p data-en="Some parts are on paper, and the Authority is moving parts of the exam to a dedicated electronic system.">تُقدَّم بعض الأجزاء على الورق، وتتجه الهيئة إلى تطبيق أجزاء منها إلكترونياً عبر نظام آلي خاص.</p></div></div>
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div>
-          <div><h3>زمن محدد</h3><p>لكل ورقة وقت محدد؛ وتصل مدة ورقتي الرياضيات والعلوم إلى نحو ساعتين، فتنظيم الوقت مهارة أساسية.</p></div></div>
+          <div><h3 data-en="Timed papers">زمن محدد</h3><p data-en="Each paper has a set time; the Mathematics and Science papers last about two hours, so time management is a key skill.">لكل ورقة وقت محدد؛ وتصل مدة ورقتي الرياضيات والعلوم إلى نحو ساعتين، فتنظيم الوقت مهارة أساسية.</p></div></div>
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-          <div><h3>سرية وأمان</h3><p>تُطبع الأوراق وتُشحن تحت إجراءات سرية، ويراقب الاختبار مراقبون، ويُصحَّح بعيداً عن المدرسة.</p></div></div>
+          <div><h3 data-en="Confidential and secure">سرية وأمان</h3><p data-en="Papers are printed and shipped under confidential procedures, invigilators supervise the exam, and marking happens outside the school.">تُطبع الأوراق وتُشحن تحت إجراءات سرية، ويراقب الاختبار مراقبون، ويُصحَّح بعيداً عن المدرسة.</p></div></div>
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v16H4zM4 9h16M9 4v16"/></svg></div>
-          <div><h3>تصحيح موحّد</h3><p>يصحّح مختصون مدرَّبون وفق دليل تصحيح واحد، مع مراجعة لضمان الدقة والثبات.</p></div></div>
+          <div><h3 data-en="Unified marking">تصحيح موحّد</h3><p data-en="Trained specialists mark using a single marking guide, with reviews to ensure accuracy and consistency.">يصحّح مختصون مدرَّبون وفق دليل تصحيح واحد، مع مراجعة لضمان الدقة والثبات.</p></div></div>
         <div class="how-item"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div>
-          <div><h3>تقارير مفصّلة</h3><p>تصدر النتائج في تقارير للطالب والمدرسة ووزارة التربية، توضّح المستوى في كل مادة ومهارة.</p></div></div>
+          <div><h3 data-en="Detailed reports">تقارير مفصّلة</h3><p data-en="Results are issued in reports for students, schools and the Ministry of Education, showing the level in each subject and skill.">تصدر النتائج في تقارير للطالب والمدرسة ووزارة التربية، توضّح المستوى في كل مادة ومهارة.</p></div></div>
       </div>
     </div>
   </section>
@@ -441,16 +618,16 @@ footer a{color:var(--red)}
   <section class="block" id="when">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">موعدها</span>
-        <h2>متى تُعقد الاختبارات؟</h2>
-        <p>رحلة الاختبار خلال العام الدراسي في ثلاث محطات.</p>
+        <span class="kicker" data-en="When">موعدها</span>
+        <h2 data-en="When are the exams held?">متى تُعقد الاختبارات؟</h2>
+        <p data-en="The exam journey through the school year, in three stages.">رحلة الاختبار خلال العام الدراسي في ثلاث محطات.</p>
       </div>
       <div class="when">
-        <div><span class="step">المحطة الأولى</span><h3>الإعلان والتهيئة</h3><p>تُعلن الهيئة الجدول الرسمي وتبلّغه للمدارس، وتُعرّف الطلبة بشكل الاختبار ونماذجه.</p></div>
-        <div><span class="step">المحطة الثانية</span><h3>يوم الاختبار</h3><p>يُعقد عادةً في الفصل الدراسي الثاني قبل اختبارات نهاية العام، مادةً في كل يوم وفي الفترة الصباحية.</p></div>
-        <div><span class="step">المحطة الثالثة</span><h3>النتائج والتقارير</h3><p>بعد التصحيح والتدقيق تصدر التقارير للمدارس والطلبة، وتُنشر مؤشرات الأداء العامة.</p></div>
+        <div><span class="step" data-en="Stage one">المحطة الأولى</span><h3 data-en="Announcement &amp;amp; preparation">الإعلان والتهيئة</h3><p data-en="The Authority announces the official timetable to schools and introduces students to the exam format and samples.">تُعلن الهيئة الجدول الرسمي وتبلّغه للمدارس، وتُعرّف الطلبة بشكل الاختبار ونماذجه.</p></div>
+        <div><span class="step" data-en="Stage two">المحطة الثانية</span><h3 data-en="Exam day">يوم الاختبار</h3><p data-en="Usually held in the second semester before end-of-year exams, one subject per day, in the morning.">يُعقد عادةً في الفصل الدراسي الثاني قبل اختبارات نهاية العام، مادةً في كل يوم وفي الفترة الصباحية.</p></div>
+        <div><span class="step" data-en="Stage three">المحطة الثالثة</span><h3 data-en="Results &amp;amp; reports">النتائج والتقارير</h3><p data-en="After marking and checking, reports are issued to schools and students, and overall performance indicators are published.">بعد التصحيح والتدقيق تصدر التقارير للمدارس والطلبة، وتُنشر مؤشرات الأداء العامة.</p></div>
       </div>
-      <p class="note">ⓘ المواعيد الدقيقة تتغيّر من عام لآخر؛ اعتمد دائماً على الجدول الذي تعلنه مدرستك وهيئة جودة التعليم والتدريب.</p>
+      <p class="note" data-en="ⓘ Exact dates change every year; always follow the timetable announced by your school and the Education &amp;amp; Training Quality Authority.">ⓘ المواعيد الدقيقة تتغيّر من عام لآخر؛ اعتمد دائماً على الجدول الذي تعلنه مدرستك وهيئة جودة التعليم والتدريب.</p>
     </div>
   </section>
 
@@ -458,28 +635,28 @@ footer a{color:var(--red)}
   <section class="block alt" id="tips">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">الاستعداد</span>
-        <h2>كيف تستعد وتتفوّق؟</h2>
-        <p>نصائح عملية قبل الاختبار وفي يومه وأثناءه.</p>
+        <span class="kicker" data-en="Get ready">الاستعداد</span>
+        <h2 data-en="How to prepare and excel">كيف تستعد وتتفوّق؟</h2>
+        <p data-en="Practical tips before the exam, on the day, and during it.">نصائح عملية قبل الاختبار وفي يومه وأثناءه.</p>
       </div>
       <div class="tips">
-        <div class="tip-col"><h3>📚 قبل الاختبار</h3><ul>
-          <li>حل نماذج الاختبارات الوطنية السابقة لتتعوّد على أسلوب الأسئلة.</li>
-          <li>ركّز على فهم المفاهيم لا حفظها، وتدرّب على شرح خطوات الحل.</li>
-          <li>اقرأ نصوصاً عربية وإنجليزية متنوعة لتقوية مهارة الفهم القرائي.</li>
-          <li>تدرّب على الحساب الذهني دون الاعتماد على الآلة الحاسبة.</li>
+        <div class="tip-col"><h3 data-en="📚 Before the exam">📚 قبل الاختبار</h3><ul>
+          <li data-en="Practise past national exam papers to get used to the question style.">حل نماذج الاختبارات الوطنية السابقة لتتعوّد على أسلوب الأسئلة.</li>
+          <li data-en="Focus on understanding concepts rather than memorising them, and practise explaining your steps.">ركّز على فهم المفاهيم لا حفظها، وتدرّب على شرح خطوات الحل.</li>
+          <li data-en="Read a variety of Arabic and English texts to strengthen your reading comprehension.">اقرأ نصوصاً عربية وإنجليزية متنوعة لتقوية مهارة الفهم القرائي.</li>
+          <li data-en="Practise mental maths without relying on a calculator.">تدرّب على الحساب الذهني دون الاعتماد على الآلة الحاسبة.</li>
         </ul></div>
-        <div class="tip-col"><h3>🌅 يوم الاختبار</h3><ul>
-          <li>نم مبكراً وتناول فطوراً صحياً.</li>
-          <li>أحضر أدواتك: أقلام، ممحاة، مسطرة، وبطاقتك إن طُلبت.</li>
-          <li>احضر مبكراً لتهدأ قبل البدء.</li>
-          <li>ثق بنفسك؛ الاختبار يقيس ما تعلمته طوال السنوات.</li>
+        <div class="tip-col"><h3 data-en="🌅 Exam day">🌅 يوم الاختبار</h3><ul>
+          <li data-en="Sleep early and eat a healthy breakfast.">نم مبكراً وتناول فطوراً صحياً.</li>
+          <li data-en="Bring your tools: pens, an eraser, a ruler, and your ID card if required.">أحضر أدواتك: أقلام، ممحاة، مسطرة، وبطاقتك إن طُلبت.</li>
+          <li data-en="Arrive early so you can settle down before you start.">احضر مبكراً لتهدأ قبل البدء.</li>
+          <li data-en="Trust yourself — the exam measures what you&#x27;ve learned over the years.">ثق بنفسك؛ الاختبار يقيس ما تعلمته طوال السنوات.</li>
         </ul></div>
-        <div class="tip-col"><h3>✍️ أثناء الاختبار</h3><ul>
-          <li>اقرأ التعليمات وكل سؤال بعناية قبل الإجابة.</li>
-          <li>ابدأ بالأسئلة السهلة ثم عد إلى الأصعب.</li>
-          <li>لا تترك سؤالاً دون إجابة، واكتب خطوات الحل في الأسئلة المفتوحة.</li>
-          <li>راجع إجاباتك في الدقائق الأخيرة.</li>
+        <div class="tip-col"><h3 data-en="✍️ During the exam">✍️ أثناء الاختبار</h3><ul>
+          <li data-en="Read the instructions and every question carefully before answering.">اقرأ التعليمات وكل سؤال بعناية قبل الإجابة.</li>
+          <li data-en="Start with the easy questions, then come back to the harder ones.">ابدأ بالأسئلة السهلة ثم عد إلى الأصعب.</li>
+          <li data-en="Don&#x27;t leave any question unanswered, and show your working in open questions.">لا تترك سؤالاً دون إجابة، واكتب خطوات الحل في الأسئلة المفتوحة.</li>
+          <li data-en="Review your answers in the last few minutes.">راجع إجاباتك في الدقائق الأخيرة.</li>
         </ul></div>
       </div>
     </div>
@@ -489,14 +666,14 @@ footer a{color:var(--red)}
   <section class="block" id="faq">
     <div class="wrap">
       <div class="sec-head">
-        <span class="kicker">أسئلة شائعة</span>
-        <h2>أسئلة يطرحها الطلبة كثيراً</h2>
+        <span class="kicker" data-en="FAQ">أسئلة شائعة</span>
+        <h2 data-en="Questions students often ask">أسئلة يطرحها الطلبة كثيراً</h2>
       </div>
       <div class="faq">
-        <details><summary>هل يضع معلمي أسئلة الاختبار الوطني؟</summary><p>لا. تُعدّ الأسئلة لجان متخصصة في الإدارة العامة للامتحانات الوطنية بهيئة جودة التعليم والتدريب، وتبقى سرية حتى يوم الاختبار.</p></details>
-        <details><summary>هل الأسئلة من الكتاب المدرسي نفسه؟</summary><p>الأسئلة مبنية على معايير المنهج الوطني، لكنها غالباً جديدة في صياغتها وتقيس قدرتك على تطبيق ما تعلّمته في مواقف مختلفة، لا حفظ نصوص الكتاب.</p></details>
-        <details><summary>كيف أعرف نتيجتي؟</summary><p>تصل التقارير إلى المدرسة بعد انتهاء التصحيح، وتوضّح مستواك في كل مادة. اسأل إدارة مدرستك أو المرشد عن طريقة الاطلاع عليها.</p></details>
-        <details><summary>أين أجد نماذج سابقة للتدرّب؟</summary><p>تنشر الهيئة نماذج ومواد توضيحية على موقعها الرسمي، ويمكنك أيضاً سؤال معلمي المواد. وفي الأسفل نموذج تجريبي سريع تقيس به نفسك الآن.</p></details>
+        <details><summary data-en="Does my teacher write the national exam questions?">هل يضع معلمي أسئلة الاختبار الوطني؟</summary><p data-en="No. The questions are prepared by specialist committees at the Directorate of National Examinations at the BQA, and are kept confidential until exam day.">لا. تُعدّ الأسئلة لجان متخصصة في الإدارة العامة للامتحانات الوطنية بهيئة جودة التعليم والتدريب، وتبقى سرية حتى يوم الاختبار.</p></details>
+        <details><summary data-en="Are the questions taken straight from the textbook?">هل الأسئلة من الكتاب المدرسي نفسه؟</summary><p data-en="The questions are based on the national curriculum standards, but they&#x27;re usually newly worded and test your ability to apply what you&#x27;ve learned in new situations — not to memorise textbook passages.">الأسئلة مبنية على معايير المنهج الوطني، لكنها غالباً جديدة في صياغتها وتقيس قدرتك على تطبيق ما تعلّمته في مواقف مختلفة، لا حفظ نصوص الكتاب.</p></details>
+        <details><summary data-en="How do I find out my result?">كيف أعرف نتيجتي؟</summary><p data-en="Reports reach your school once marking is complete and show your level in each subject. Ask your school administration or counsellor how to view them.">تصل التقارير إلى المدرسة بعد انتهاء التصحيح، وتوضّح مستواك في كل مادة. اسأل إدارة مدرستك أو المرشد عن طريقة الاطلاع عليها.</p></details>
+        <details><summary data-en="Where can I find past papers to practise?">أين أجد نماذج سابقة للتدرّب؟</summary><p data-en="The Authority publishes samples and guidance on its official website, and you can also ask your subject teachers. Below is a quick practice exam you can try right now.">تنشر الهيئة نماذج ومواد توضيحية على موقعها الرسمي، ويمكنك أيضاً سؤال معلمي المواد. وفي الأسفل نموذج تجريبي سريع تقيس به نفسك الآن.</p></details>
       </div>
     </div>
   </section>
@@ -506,13 +683,13 @@ footer a{color:var(--red)}
     <div class="wrap">
       <div class="cta">
         <div>
-          <span class="kicker" style="color:#FFB3B8">جرّب بنفسك</span>
-          <h2>هل أنت مستعد للاختبار الوطني؟</h2>
-          <p>أدِّ نموذجاً محاكياً لأحد الاختبارات الوطنية السابقة مكوّناً من 15 سؤالاً في العربية والإنجليزية والرياضيات والعلوم، وعِش تجربة الاختبار الحقيقي.</p>
-          <div class="mini"><span>15 سؤالاً</span><span>إجابة إلزامية</span><span>4 مواد</span><span>محاولة واحدة فقط</span></div>
+          <span class="kicker" style="color:#FFB3B8" data-en="Try it yourself">جرّب بنفسك</span>
+          <h2 data-en="Are you ready for the national exam?">هل أنت مستعد للاختبار الوطني؟</h2>
+          <p data-en="Take a practice exam modelled on past national exams — 15 questions in Arabic, English, Mathematics and Science — and experience the real thing.">أدِّ نموذجاً محاكياً لأحد الاختبارات الوطنية السابقة مكوّناً من 15 سؤالاً في العربية والإنجليزية والرياضيات والعلوم، وعِش تجربة الاختبار الحقيقي.</p>
+          <div class="mini"><span data-en="15 questions">15 سؤالاً</span><span data-en="Every answer required">إجابة إلزامية</span><span data-en="4 subjects">4 مواد</span><span data-en="One attempt only">محاولة واحدة فقط</span></div>
         </div>
         <div class="cta-side" id="cta-side">
-          <button class="btn btn-white big" data-go-try>قم بالتجربة ←</button>
+          <button class="btn btn-white big" data-go-try data-en="Try it →">قم بالتجربة ←</button>
         </div>
       </div>
     </div>
@@ -520,8 +697,8 @@ footer a{color:var(--red)}
 
   <footer>
     <div class="wrap">
-      <span>المصدر الرسمي: <a href="https://www.bqa.gov.bh" target="_blank" rel="noopener">هيئة جودة التعليم والتدريب</a></span>
-      <span>موقع توعوي للطلبة — النموذج التجريبي للتدريب فقط وليس اختباراً رسمياً.</span>
+      <span data-en="Official source: &lt;a href=&quot;https://www.bqa.gov.bh&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Education &amp;amp; Training Quality Authority&lt;/a&gt;">المصدر الرسمي: <a href="https://www.bqa.gov.bh" target="_blank" rel="noopener">هيئة جودة التعليم والتدريب</a></span>
+      <span data-en="An awareness site for students — the practice exam is for training only and is not an official exam.">موقع توعوي للطلبة — النموذج التجريبي للتدريب فقط وليس اختباراً رسمياً.</span>
     </div>
   </footer>
 </div>
@@ -530,49 +707,49 @@ footer a{color:var(--red)}
 <div id="view-intro" class="hidden">
   <div class="page">
     <div class="wrap">
-      <button class="back" data-go-home>→ العودة إلى الصفحة الرئيسة</button>
+      <button class="back" data-go-home data-en="← Back to home">→ العودة إلى الصفحة الرئيسة</button>
       <div class="intro">
         <div class="intro-info">
           <svg class="serration" viewBox="0 0 100 500" preserveAspectRatio="none" aria-hidden="true" style="width:46px;opacity:.12"><path d="M100 0 V500 H0 L40 450 L0 400 L40 350 L0 300 L40 250 L0 200 L40 150 L0 100 L40 50 L0 0 Z" fill="#fff"/></svg>
-          <span class="eyebrow">النموذج التجريبي</span>
-          <h1>أنت على وشك تقديم اختبار وطني</h1>
-          <p>ستقوم الآن بتقديم نموذج محاكٍ لأحد الاختبارات الوطنية السابقة، بأسئلة على نمط الصف التاسع. اقرأ التعليمات جيداً قبل البدء.</p>
+          <span class="eyebrow" data-en="Practice exam">النموذج التجريبي</span>
+          <h1 data-en="You&#x27;re about to take a national exam">أنت على وشك تقديم اختبار وطني</h1>
+          <p data-en="You will now take a practice exam modelled on past national exams, with Grade 9-style questions. Read the instructions carefully before you start.">ستقوم الآن بتقديم نموذج محاكٍ لأحد الاختبارات الوطنية السابقة، بأسئلة على نمط الصف التاسع. اقرأ التعليمات جيداً قبل البدء.</p>
           <ul class="rules">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span>الاختبار مكوّن من <b>15 سؤالاً</b> اختيار من متعدد.</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/></svg><span><b>الإجابة عن كل سؤال إلزامية</b>، ولا يُرسل الاختبار إلا بعد حل جميع الأسئلة.</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/></svg><span>المواد: العربية، الإنجليزية، الرياضيات، العلوم.</span></li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span>لديك <b>محاولة واحدة فقط</b>؛ بعد الإرسال لا يمكنك إعادة الاختبار.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg><span data-en="The exam has &lt;b&gt;15 multiple-choice&lt;/b&gt; questions.">الاختبار مكوّن من <b>15 سؤالاً</b> اختيار من متعدد.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/></svg><span data-en="&lt;b&gt;Every question must be answered&lt;/b&gt; — the exam can only be submitted once all questions are answered."><b>الإجابة عن كل سؤال إلزامية</b>، ولا يُرسل الاختبار إلا بعد حل جميع الأسئلة.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/></svg><span data-en="Subjects: Arabic, English, Mathematics, Science.">المواد: العربية، الإنجليزية، الرياضيات، العلوم.</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg><span data-en="You have &lt;b&gt;one attempt only&lt;/b&gt;; once you submit, you can&#x27;t retake the exam.">لديك <b>محاولة واحدة فقط</b>؛ بعد الإرسال لا يمكنك إعادة الاختبار.</span></li>
           </ul>
         </div>
 
         <div class="form" id="start-form-box">
-          <h2>بيانات الطالب</h2>
-          <p>أدخل اسمك وصفك ثم اضغط «ابدأ الاختبار».</p>
+          <h2 data-en="Student details">بيانات الطالب</h2>
+          <p data-en="Enter your name and class, then press “Start exam”.">أدخل اسمك وصفك ثم اضغط «ابدأ الاختبار».</p>
           <form id="start-form" novalidate>
             <div class="field">
-              <label for="f-name">الاسم الثلاثي</label>
-              <input id="f-name" type="text" autocomplete="name" placeholder="مثال: محمد أحمد علي" maxlength="60">
+              <label for="f-name" data-en="Full name">الاسم الثلاثي</label>
+              <input id="f-name" type="text" autocomplete="name" placeholder="مثال: محمد أحمد علي" data-en-ph="e.g. Mohammed Ahmed Ali" maxlength="60">
               <span class="err" id="e-name"></span>
             </div>
             <div class="field">
-              <label for="f-grade">الصف</label>
+              <label for="f-grade" data-en="Class">الصف</label>
               <select id="f-grade">
-                <option value="">— اختر صفّك —</option>
-                <option>ثالث إعدادي 1</option><option>ثالث إعدادي 2</option><option>ثالث إعدادي 3</option>
-                <option>ثالث إعدادي 4</option><option>ثالث إعدادي 5</option>
+                <option value="" data-en="— Choose your class —">— اختر صفّك —</option>
+                <option value="ثالث إعدادي 1" data-en="Grade 9 – Class 1">ثالث إعدادي 1</option><option value="ثالث إعدادي 2" data-en="Grade 9 – Class 2">ثالث إعدادي 2</option><option value="ثالث إعدادي 3" data-en="Grade 9 – Class 3">ثالث إعدادي 3</option>
+                <option value="ثالث إعدادي 4" data-en="Grade 9 – Class 4">ثالث إعدادي 4</option><option value="ثالث إعدادي 5" data-en="Grade 9 – Class 5">ثالث إعدادي 5</option>
               </select>
               <span class="err" id="e-grade"></span>
             </div>
-            <label class="check"><input type="checkbox" id="f-agree"><span>قرأت التعليمات، وأعلم أن لديّ محاولة واحدة فقط.</span></label>
-            <button type="submit" class="btn btn-red" id="start-btn" disabled>ابدأ الاختبار</button>
+            <label class="check"><input type="checkbox" id="f-agree"><span data-en="I have read the instructions and understand I have only one attempt.">قرأت التعليمات، وأعلم أن لديّ محاولة واحدة فقط.</span></label>
+            <button type="submit" class="btn btn-red" id="start-btn" disabled data-en="Start exam">ابدأ الاختبار</button>
           </form>
         </div>
 
         <div class="form locked hidden" id="locked-box">
           <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
-          <h2>لقد أدّيت هذا الاختبار مسبقاً</h2>
+          <h2 data-en="You&#x27;ve already taken this exam">لقد أدّيت هذا الاختبار مسبقاً</h2>
           <p id="locked-text">لا يمكن تقديم الاختبار أكثر من مرة.</p>
-          <button class="btn btn-line" data-go-home style="width:100%">العودة إلى الصفحة الرئيسة</button>
+          <button class="btn btn-line" data-go-home style="width:100%" data-en="Back to home">العودة إلى الصفحة الرئيسة</button>
         </div>
       </div>
     </div>
@@ -580,11 +757,11 @@ footer a{color:var(--red)}
 </div>
 
 <!-- =================== EXAM =================== -->
-<div id="view-exam" class="hidden">
+<div id="view-exam" class="hidden" dir="rtl" lang="ar">
   <div class="exam-bar">
     <div class="wrap">
       <div class="who"><div class="avatar" id="x-av">ي</div><div><b id="x-name">—</b><small id="x-grade">—</small></div></div>
-      <button class="exit-btn" id="exit-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>خروج</button>
+      <button class="exit-btn" id="exit-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span>خروج</span></button>
     </div>
     <div class="progress"><i id="x-prog"></i></div>
   </div>
@@ -605,7 +782,7 @@ footer a{color:var(--red)}
 </div>
 
 <!-- MODAL -->
-<div class="modal hidden" id="modal">
+<div class="modal hidden" id="modal" dir="rtl" lang="ar">
   <div class="modal-box">
     <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></div>
     <h3>إرسال الاختبار؟</h3>
@@ -617,7 +794,7 @@ footer a{color:var(--red)}
   </div>
 </div>
 
-<div class="modal hidden" id="exit-modal">
+<div class="modal hidden" id="exit-modal" dir="rtl" lang="ar">
   <div class="modal-box">
     <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:28px;height:28px"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
     <h3>الخروج من الاختبار؟</h3>
@@ -646,6 +823,11 @@ footer a{color:var(--red)}
     appId: "1:340498220330:web:4cd88c04cc774fcd09ca53"
   };
   const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
+
+  // ---------- اللغة ----------
+  let LANG = (() => { try{ return localStorage.getItem('bh-ne-lang') === 'en' ? 'en' : 'ar'; }catch(e){ return 'ar'; } })();
+  const L = (ar, en) => LANG === 'en' ? en : ar;
+  const gradeLabel = v => LANG === 'en' ? String(v).replace(/ثالث إعدادي\s*(\d)/, 'Grade 9 – Class $1') : v;
 
   // ---------- storage (safe) ----------
   const mem = {};
@@ -687,7 +869,7 @@ footer a{color:var(--red)}
   const $ = id => document.getElementById(id);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const views = ['view-home','view-intro','view-exam'];
-  function show(v){ views.forEach(x => $(x).classList.toggle('hidden', x!==v)); window.scrollTo({top:0, behavior:'instant'}); }
+  function show(v){ views.forEach(x => $(x).classList.toggle('hidden', x!==v)); const el = $(v); el.classList.remove('view-enter'); void el.offsetWidth; el.classList.add('view-enter'); window.scrollTo({top:0, behavior:'instant'}); }
   function toast(msg){ const t=document.createElement('div'); t.className='toast'; t.innerHTML='<span>✓</span>'+esc(msg); document.body.appendChild(t); setTimeout(()=>t.remove(),4200); }
   // ---------- Firebase (primary) + Google Sheet (backup) ----------
   const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
@@ -753,14 +935,14 @@ footer a{color:var(--red)}
   function renderCTA(){
     const done = store.get(DONE_KEY);
     const side = $('cta-side');
-    if(!done){ side.innerHTML = '<button class="btn btn-white big" data-go-try>قم بالتجربة ←</button>'; return; }
+    if(!done){ side.innerHTML = '<button class="btn btn-white big" data-go-try>' + L('قم بالتجربة ←', 'Try it →') + '</button>'; return; }
     const d = new Date(done.at);
     side.innerHTML = `<div class="result-card">
       <div class="score" style="font-size:2.2rem">✓</div>
-      <div style="font-family:'Readex Pro','IBM Plex Sans Arabic',sans-serif;font-size:1.25rem;font-weight:600;margin-top:4px">تم إرسال اختبارك بنجاح</div>
-      <div class="meta">${esc(done.name)} — ${esc(done.grade)}<br>${d.toLocaleDateString('ar-BH',{year:'numeric',month:'long',day:'numeric'})}</div>
+      <div style="font-family:'Readex Pro','IBM Plex Sans Arabic',sans-serif;font-size:1.25rem;font-weight:600;margin-top:4px">${L('تم إرسال اختبارك بنجاح', 'Your exam was submitted')}</div>
+      <div class="meta">${esc(done.name)} — ${esc(gradeLabel(done.grade))}<br>${d.toLocaleDateString(L('ar-BH','en-GB'),{year:'numeric',month:'long',day:'numeric'})}</div>
     </div>
-    <button class="btn btn-ghost" disabled style="width:100%">تم أداء التجربة</button>`;
+    <button class="btn btn-ghost" disabled style="width:100%">${L('تم أداء التجربة', 'Practice exam completed')}</button>`;
   }
 
   // ---------- intro ----------
@@ -772,7 +954,7 @@ footer a{color:var(--red)}
     $('start-form-box').classList.toggle('hidden', !!done);
     $('locked-box').classList.toggle('hidden', !done);
     if(done){
-      $('locked-text').textContent = `أدّى ${done.name} هذا الاختبار وتم إرساله. لا يمكن تقديم الاختبار أكثر من مرة.`;
+      $('locked-text').textContent = L(`أدّى ${done.name} هذا الاختبار وتم إرساله. لا يمكن تقديم الاختبار أكثر من مرة.`, `${done.name} has already taken and submitted this exam. It can't be taken more than once.`);
     }
     show('view-intro');
   }
@@ -781,8 +963,8 @@ footer a{color:var(--red)}
     const n = nameI.value.trim(), g = gradeI.value;
     const nOk = n.split(/\s+/).filter(Boolean).length>=2 && n.length>=5;
     if(showErr){
-      $('e-name').textContent = nOk?'':'اكتب اسمك (اسمان على الأقل).';
-      $('e-grade').textContent = g?'':'اختر صفّك.';
+      $('e-name').textContent = nOk?'':L('اكتب اسمك (اسمان على الأقل).', 'Enter your name (at least two names).');
+      $('e-grade').textContent = g?'':L('اختر صفّك.', 'Choose your class.');
     }
     const ok = nOk && g && agreeI.checked;
     startB.disabled = !ok;
@@ -793,11 +975,11 @@ footer a{color:var(--red)}
   $('start-form').addEventListener('submit', async e => {
     e.preventDefault();
     if(store.get(DONE_KEY)){ openIntro(); return; }
-    if(!validate(true)) return;
+    if(!validate(true)){ const f = $('start-form-box'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake'); return; }
     if(API_URL || FIREBASE_CONFIG.projectId){
-      startB.disabled = true; startB.textContent = 'جارٍ التحقق...';
+      startB.disabled = true; startB.textContent = L('جارٍ التحقق...', 'Checking...');
       const taken = await alreadyTaken(nameI.value.trim(), gradeI.value);
-      startB.textContent = 'ابدأ الاختبار'; startB.disabled = false;
+      startB.textContent = L('ابدأ الاختبار', 'Start exam'); startB.disabled = false;
       if(taken){
         store.set(DONE_KEY, { name:nameI.value.trim(), grade:gradeI.value, at:Date.now() });
         renderCTA(); openIntro(); return;
@@ -809,7 +991,7 @@ footer a{color:var(--red)}
   });
 
   // ---------- exam ----------
-  let state = null;
+  let state = null, navDir = 1, justAnswered = -1;
   function startExam(resumed){
     $('x-name').textContent = state.name;
     $('x-grade').textContent = state.grade + ' — نموذج تجريبي';
@@ -821,26 +1003,29 @@ footer a{color:var(--red)}
   const allDone = () => state.answers.every(a => a!==null);
   const firstOpen = () => { const k = state.answers.indexOf(null); return k<0 ? Q.length-1 : k; };
   function renderQ(){
-    const i = state.cur, q = Q[i], sj = SUBJ[q.s], en = q.s==='en';
-    const keys = en?EN_KEYS:AR_KEYS;
+    const i = state.cur, q = Q[i], sj = SUBJ[q.s];
+    const en = q.s==='en', qDir = en ? 'ltr' : 'rtl', keys = en ? EN_KEYS : AR_KEYS;
+    const qText = q.t, qOpts = q.o;
     $('qcard').innerHTML = `
       <div class="qhead"><span class="qnum">السؤال ${i+1} من ${Q.length}</span>
       <span class="subj-tag" style="color:${sj.c};background:${sj.bg}">${sj.n}</span></div>
-      <div class="${en?'ltr':''}" ${en?'dir="ltr"':''}>
-        ${q.p?`<div class="passage" ${en?'dir="ltr"':''}>${esc(q.p)}</div>`:''}
-        <div class="qtext">${esc(q.t)}</div>
-        <div class="opts">${q.o.map((o,j)=>`<button class="opt ${state.answers[i]===j?'sel':''}" data-opt="${j}"><span class="k">${keys[j]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+      <div class="${qDir}" dir="${qDir}">
+        ${q.p?`<div class="passage" dir="${qDir}">${esc(q.p)}</div>`:''}
+        <div class="qtext">${esc(qText)}</div>
+        <div class="opts">${qOpts.map((o,j)=>`<button class="opt ${state.answers[i]===j?'sel':''}" data-opt="${j}"><span class="k">${keys[j]}</span><span>${esc(o)}</span></button>`).join('')}</div>
       </div>
       <div class="qnav">
         <button class="btn btn-line" id="prev" ${i===0?'disabled':''}>→ السابق</button>
         ${i<Q.length-1?'<button class="btn btn-red" id="next">التالي ←</button>':'<button class="btn btn-red" id="fin">إنهاء وإرسال</button>'}
       </div>
       <p class="req" id="req"></p>`;
-    $('qcard').style.animation='none'; void $('qcard').offsetWidth; $('qcard').style.animation='';
+    const qc = $('qcard'); qc.classList.remove('in-next','in-prev'); void qc.offsetWidth; qc.classList.add(navDir < 0 ? 'in-prev' : 'in-next');
+    qc.querySelectorAll('.opt').forEach((o, k) => o.style.setProperty('--i', k));
     $('qcard').querySelectorAll('[data-opt]').forEach(b => b.onclick = () => {
       state.answers[i] = +b.dataset.opt; store.set(PROG_KEY, state);
       $('qcard').querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel', x===b));
-      renderGrid(); updateNav();
+      b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+      justAnswered = i; renderGrid(); updateNav();
     });
     const p=$('prev'), n=$('next'), f=$('fin');
     if(p) p.onclick = () => go(i-1);
@@ -857,11 +1042,12 @@ footer a{color:var(--red)}
     else r.textContent = '';
     $('submit-btn').disabled = !allDone();
   }
-  function go(i){ if(i>firstOpen() && state.answers[i]===null) return; state.cur = i; store.set(PROG_KEY, state); renderQ(); renderGrid(); window.scrollTo({top:0,behavior:'smooth'}); }
+  function go(i){ if(i>firstOpen() && state.answers[i]===null) return; navDir = i < state.cur ? -1 : 1; state.cur = i; store.set(PROG_KEY, state); renderQ(); renderGrid(); window.scrollTo({top:0,behavior:'smooth'}); }
   function renderGrid(){
     const fo = firstOpen();
     $('qgrid').innerHTML = Q.map((_,i)=>`<button class="${state.answers[i]!==null?'done':''} ${i===state.cur?'cur':''}" data-q="${i}" ${i>fo&&state.answers[i]===null?'disabled':''}>${i+1}</button>`).join('');
     $('qgrid').querySelectorAll('[data-q]').forEach(b => b.onclick = () => go(+b.dataset.q));
+    if(justAnswered >= 0){ const jb = $('qgrid').querySelector('[data-q="'+justAnswered+'"]'); if(jb) jb.classList.add('just'); justAnswered = -1; }
     const c = state.answers.filter(a=>a!==null).length;
     $('x-count').textContent = c===Q.length ? 'أجبت عن جميع الأسئلة ✓ يمكنك الإرسال الآن.' : `أجبت عن ${c} من ${Q.length} — أكمل جميع الأسئلة لتتمكن من الإرسال.`;
     $('submit-btn').disabled = c!==Q.length;
@@ -880,12 +1066,12 @@ footer a{color:var(--red)}
   $('modal').addEventListener('click', e => { if(e.target.id==='modal') closeModal(); });
   okB.onclick = async () => {
     if(!state || !allDone() || sending) return;
-    if(!API_URL && !FIREBASE_CONFIG.projectId){ $('modal').classList.add('hidden'); finish('تم إرسال اختبارك بنجاح'); return; }
+    if(!API_URL && !FIREBASE_CONFIG.projectId){ $('modal').classList.add('hidden'); finish(L('تم إرسال اختبارك بنجاح', 'Your exam was submitted successfully')); return; }
     sending = true; okB.disabled = true; cancelB.disabled = true; okB.textContent = 'جارٍ الإرسال...';
     const r = await sendResult(state);
     sending = false; okB.disabled = false; cancelB.disabled = false;
-    if(r && r.ok){ $('modal').classList.add('hidden'); finish('تم إرسال اختبارك بنجاح'); return; }
-    if(r && r.error==='duplicate'){ $('modal').classList.add('hidden'); finish('سبق إرسال اختبار بهذا الاسم وهذا الصف'); return; }
+    if(r && r.ok){ $('modal').classList.add('hidden'); finish(L('تم إرسال اختبارك بنجاح', 'Your exam was submitted successfully')); return; }
+    if(r && r.error==='duplicate'){ $('modal').classList.add('hidden'); finish(L('سبق إرسال اختبار بهذا الاسم وهذا الصف', 'An exam was already submitted with this name and class')); return; }
     $('modal-text').textContent = 'تعذّر إرسال الاختبار. تأكّد من اتصالك بالإنترنت ثم حاول مرة أخرى — إجاباتك محفوظة.';
     okB.textContent = 'إعادة المحاولة';
   };
@@ -898,6 +1084,7 @@ footer a{color:var(--red)}
     renderCTA();
     show('view-home');
     toast(msg);
+    setTimeout(() => { const t = document.getElementById('try'); if(t) t.scrollIntoView({behavior:'smooth', block:'center'}); window.__confetti && window.__confetti(); }, 350);
   }
 
   // ---------- exit ----------
@@ -908,18 +1095,190 @@ footer a{color:var(--red)}
     $('exit-modal').classList.add('hidden');
     store.del(PROG_KEY); state = null;
     show('view-home');
-    toast('تم الخروج من الاختبار دون إرسال');
+    toast(L('تم الخروج من الاختبار دون إرسال', 'You left the exam without submitting'));
   };
+
+  // ---------- تبديل اللغة ----------
+  function applyLang(animate){
+    const en = LANG === 'en', root = document.documentElement;
+    root.lang = LANG; root.dir = en ? 'ltr' : 'rtl';
+    document.title = en ? 'National Exams in the Kingdom of Bahrain' : 'الاختبارات الوطنية في مملكة البحرين';
+    document.querySelectorAll('[data-en]').forEach(el => { if(el.dataset.ar === undefined) el.dataset.ar = el.innerHTML; el.innerHTML = en ? el.dataset.en : el.dataset.ar; });
+    document.querySelectorAll('[data-en-ph]').forEach(el => { if(el.dataset.arPh === undefined) el.dataset.arPh = el.placeholder; el.placeholder = en ? el.dataset.enPh : el.dataset.arPh; });
+    document.querySelectorAll('[data-en-aria]').forEach(el => { if(el.dataset.arAria === undefined) el.dataset.arAria = el.getAttribute('aria-label'); el.setAttribute('aria-label', en ? el.dataset.enAria : el.dataset.arAria); });
+    const lb = $('lang-btn'); lb.textContent = en ? 'عربي' : 'EN'; lb.setAttribute('aria-label', en ? 'التبديل إلى العربية' : 'Switch to English'); lb.lang = en ? 'ar' : 'en';
+    renderCTA();
+    if(!$('view-intro').classList.contains('hidden') && store.get(DONE_KEY)) openIntro();
+    ['e-name','e-grade'].forEach(id => { $(id).textContent = ''; });
+    if(animate){ document.body.classList.remove('lang-anim'); void document.body.offsetWidth; document.body.classList.add('lang-anim'); }
+  }
+  $('lang-btn').addEventListener('click', () => {
+    LANG = LANG === 'en' ? 'ar' : 'en';
+    try{ localStorage.setItem('bh-ne-lang', LANG); }catch(e){}
+    applyLang(true);
+  });
 
   // ---------- wiring ----------
   document.addEventListener('click', e => {
     if(e.target.closest('[data-go-try]')){ e.preventDefault(); openIntro(); }
     if(e.target.closest('[data-go-home]')){ e.preventDefault(); show('view-home'); }
   });
-  renderCTA();
+  applyLang(false);
   // if a test was interrupted (page closed), bring the student back to it
   const pending = store.get(PROG_KEY);
   if(pending && !store.get(DONE_KEY)){ state = pending; startExam(true); }
+})();
+</script>
+<script>
+/* ===== طبقة الحركة والتفاعل ===== */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const $$ = (q, r=document) => [...r.querySelectorAll(q)];
+
+  // كلمات العنوان تظهر واحدة تلو الأخرى
+  const h1 = document.querySelector('.hero h1');
+  if(h1 && !reduce){
+    let i = 0;
+    const wrap = node => {
+      [...node.childNodes].forEach(n => {
+        if(n.nodeType === 3){
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(part => {
+            if(!part) return;
+            if(/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(part)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--i', i++); s.textContent = part; frag.appendChild(s);
+          });
+          n.replaceWith(frag);
+        } else if(n.nodeType === 1 && n.tagName !== 'BR'){
+          if(n.tagName === 'SPAN'){ n.classList.add('w'); n.style.setProperty('--i', i++); } else wrap(n);
+        }
+      });
+    };
+    wrap(h1);
+  }
+
+  // أشكال عائمة في الواجهة
+  const hero = document.querySelector('.hero');
+  if(hero && !reduce){
+    const fl = document.createElement('div'); fl.className = 'floaters';
+    const shapes = [
+      ['c', 12, 18, 90, 11, -30, -60, 0], ['dm', 68, 12, 34, 9, 40, 50, 90], ['c', 82, 70, 140, 14, -50, -30, 0],
+      ['dm', 30, 78, 26, 8, 30, -50, 180], ['c', 52, 40, 18, 7, 20, 40, 0], ['dm', 8, 55, 46, 12, -20, 30, 120], ['c', 60, 85, 60, 10, 40, -40, 0]
+    ];
+    shapes.forEach(([k, l, t, sz, dur, x, y, r], idx) => {
+      const e = document.createElement('i'); e.className = k;
+      Object.assign(e.style, { left: l + '%', top: t + '%', width: sz + 'px', height: sz + 'px' });
+      e.style.setProperty('--t', dur + 's'); e.style.setProperty('--x', x + 'px'); e.style.setProperty('--y', y + 'px'); e.style.setProperty('--r', r + 'deg'); e.style.setProperty('--dl', (-idx * 1.3) + 's');
+      e.dataset.depth = (idx % 3 + 1) * 8;
+      fl.appendChild(e);
+    });
+    hero.prepend(fl);
+    const cue = document.createElement('div'); cue.className = 'scroll-cue'; hero.appendChild(cue);
+    if(fine){
+      hero.addEventListener('pointermove', e => {
+        const r = hero.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+        fl.querySelectorAll('i').forEach(s => { const d = +s.dataset.depth; s.style.transform = `translate(${px * d * -2}px, ${py * d * -2}px)` + (s.classList.contains('dm') ? ' rotate(45deg)' : ''); });
+      });
+    }
+  }
+
+  // ظهور العناصر عند التمرير
+  const groups = [
+    ['.sec-head', ''], ['.about .txt', 'from-r'], ['.org', 'from-l'], ['.org-row', ''],
+    ['.card', 'zoom'], ['.grade', ''], ['.tl', ''], ['.how-item', ''], ['.when > div', ''],
+    ['.tip-col', ''], ['.faq details', ''], ['.cta', 'zoom'], ['.note', '']
+  ];
+  groups.forEach(([sel, extra]) => {
+    const parents = new Map();
+    $$(sel).forEach(el => {
+      const p = el.parentElement, k = (parents.get(p) || 0); parents.set(p, k + 1);
+      el.classList.add('reveal'); if(extra) el.classList.add(extra);
+      el.style.setProperty('--d', Math.min(k * .09, .6) + 's');
+    });
+  });
+  $$('.tl').forEach((t, i) => t.style.setProperty('--i', i));
+  $$('.mini span').forEach((t, i) => t.style.setProperty('--i', i));
+  $$('.rules li').forEach((t, i) => t.style.setProperty('--i', i));
+  const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){ const t = e.target; t.classList.add('in'); io.unobserve(t); const d = parseFloat(getComputedStyle(t).getPropertyValue('--d')) || 0; setTimeout(() => t.classList.add('done'), 900 + d * 1000); } }), { threshold: .14, rootMargin: '0px 0px -40px 0px' });
+  $$('.reveal, .timeline').forEach(el => io.observe(el));
+  if(reduce) $$('.reveal, .timeline').forEach(el => el.classList.add('in', 'done'));
+
+  // عدّاد الأرقام
+  const countUp = el => {
+    const to = +el.dataset.count, from = to > 100 ? to - 60 : 0, t0 = performance.now(), dur = 1600;
+    const step = now => { const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 4); el.textContent = Math.round(from + (to - from) * e); if(p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  if(!reduce) setTimeout(() => $$('[data-count]').forEach(countUp), 1100);
+
+  // إمالة البطاقات مع لمعة تتبع المؤشر
+  $$('.card, .how-item, .grade, .tip-col, .org').forEach(el => {
+    el.classList.add('tilt');
+    if(!fine || reduce) return;
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+      el.style.setProperty('--mx', x * 100 + '%'); el.style.setProperty('--my', y * 100 + '%');
+      el.style.transform = `perspective(900px) rotateX(${(.5 - y) * 7}deg) rotateY(${(x - .5) * 9}deg) translateY(-4px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+
+  // تموّج عند الضغط على الأزرار
+  document.addEventListener('pointerdown', e => {
+    const b = e.target.closest('.btn, .nav-cta, .opt, .grid button');
+    if(!b || b.disabled || reduce) return;
+    if(getComputedStyle(b).position === 'static') b.style.position = 'relative';
+    b.style.overflow = 'hidden';
+    const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height), s = document.createElement('span');
+    s.className = 'ripple'; Object.assign(s.style, { width: d + 'px', height: d + 'px', left: (e.clientX - r.left - d / 2) + 'px', top: (e.clientY - r.top - d / 2) + 'px' });
+    b.appendChild(s); setTimeout(() => s.remove(), 700);
+  });
+
+  // زر "قم بالتجربة" المغناطيسي
+  if(fine && !reduce){
+    document.addEventListener('pointermove', e => {
+      const b = document.querySelector('.cta .big'); if(!b) return;
+      const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, dx = e.clientX - cx, dy = e.clientY - cy, dist = Math.hypot(dx, dy);
+      b.style.transform = dist < 140 ? `translate(${dx * .18}px, ${dy * .25}px)` : '';
+    });
+  }
+
+  // شريط التقدم، ظل القائمة، الرابط النشط، زر الأعلى
+  const prog = document.getElementById('scroll-prog'), nav = document.querySelector('.nav'), top = document.getElementById('to-top'), ring = top.querySelector('circle');
+  const links = $$('.links a'), secs = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const onScroll = () => {
+    const home = document.getElementById('view-home');
+    const visible = home && !home.classList.contains('hidden');
+    const h = document.documentElement.scrollHeight - innerHeight, p = h > 0 ? scrollY / h : 0;
+    prog.style.transform = `scaleX(${visible ? p : 0})`;
+    if(nav) nav.classList.toggle('scrolled', scrollY > 10);
+    top.classList.toggle('show', visible && scrollY > 600);
+    ring.style.strokeDashoffset = 151 - 151 * p;
+    let cur = null; secs.forEach(s => { if(s.getBoundingClientRect().top < innerHeight * .35) cur = s.id; });
+    links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + cur));
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  top.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // احتفال عند إرسال الاختبار
+  const cv = document.getElementById('confetti'), cx = cv.getContext('2d');
+  window.__confetti = () => {
+    if(reduce) return;
+    cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; cx.scale(devicePixelRatio, devicePixelRatio);
+    const cols = ['#B4121C', '#E23A44', '#ffffff', '#C69A2C', '#FFD9A8', '#7E0C13'];
+    const P = Array.from({ length: 160 }, () => ({ x: innerWidth / 2 + (Math.random() - .5) * 120, y: innerHeight * .55, vx: (Math.random() - .5) * 14, vy: -Math.random() * 16 - 6, s: Math.random() * 8 + 5, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[Math.random() * cols.length | 0], sh: Math.random() < .5 }));
+    let f = 0;
+    const tick = () => {
+      cx.clearRect(0, 0, innerWidth, innerHeight);
+      P.forEach(p => { p.vy += .42; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.strokeStyle = 'rgba(0,0,0,.06)';
+        if(p.sh){ cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); } else { cx.beginPath(); cx.moveTo(0, -p.s / 2); cx.lineTo(p.s / 2, p.s / 2); cx.lineTo(-p.s / 2, p.s / 2); cx.closePath(); cx.fill(); }
+        cx.restore(); });
+      if(++f < 220) requestAnimationFrame(tick); else { cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height); }
+    };
+    tick();
+  };
 })();
 </script>
 </body>
