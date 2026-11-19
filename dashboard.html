@@ -6,7 +6,7 @@
 <title>تحليل نتائج الاختبار الوطني التجريبي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;500;600;700&family=Aref+Ruqaa:wght@700&family=Amiri:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
   --red:#B4121C; --red-d:#7E0C13; --ink:#1E1415; --muted:#6B5D5E; --paper:#FBF7F2; --sand:#F2E8DB; --line:#E7DACB;
@@ -116,6 +116,10 @@ body{overflow-x:hidden}
 .lb-row .nm small{color:var(--muted);font-size:.8rem}
 .lb-row .sc{font-family:var(--hf);font-weight:700;font-size:1.1rem}
 .lb-row .sc small{font-size:.75rem;color:var(--muted);font-weight:500}
+.cert-btn{flex:none;width:36px;height:36px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--red);display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s,border-color .2s,transform .2s}
+.cert-btn:hover{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-2px)}
+.cert-btn:disabled{opacity:.6;cursor:wait;transform:none}
+.cert-btn .spin{width:15px;height:15px;border-width:2px}
 .empty{color:var(--muted);text-align:center;padding:26px;font-size:.95rem}
 
 .hbars{display:flex;flex-direction:column;gap:14px}
@@ -503,6 +507,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
         <span class="rank ${r.rank<=3?'m'+r.rank:''}">${r.rank}</span>
         <div class="nm"><b>${esc(r.name)}</b><small>${esc(r.cls)}</small></div>
         <span class="sc num">${r.score}<small> / ${N}</small></span>
+        <button class="cert-btn" data-cert="${esc(r.id || (r.name + '|' + r.cls))}" title="تنزيل شهادة ${esc(r.name)}" aria-label="تنزيل شهادة ${esc(r.name)}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></button>
       </div>`).join('') : '<div class="empty">لا توجد نتائج بعد</div>';
 
     // per question
@@ -576,6 +581,139 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;padding:0 0 40px}
     $('more').classList.toggle('hidden', total<=25);
     $('more').textContent = showAll ? 'عرض أقل' : `عرض جميع الطلاب (${total})`;
   }
+
+  // ---------- شهادات العشرة الأوائل ----------
+  const ORD = ['', 'الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر'];
+  const MEDAL = {
+    1: ['#FFE9A8', '#D9AE3A', '#9C7417', '#B4121C', '#7E0C13'],
+    2: ['#F4F6F8', '#B9C0C8', '#7D8590', '#B4121C', '#7E0C13'],
+    3: ['#F6CFA6', '#C2864E', '#82522A', '#B4121C', '#7E0C13'],
+    x: ['#F38C93', '#D02A35', '#7E0C13', '#C69A2C', '#9C7417']
+  };
+  const C = { red:'#B4121C', redD:'#7E0C13', ink:'#1E1415', muted:'#6B5D5E', paper:'#FBF7F2', gold:'#C69A2C' };
+  const F = { hf:'"Readex Pro","IBM Plex Sans Arabic",sans-serif', bf:'"IBM Plex Sans Arabic","Readex Pro",sans-serif', title:'"Aref Ruqaa","Amiri",serif', name:'"Amiri","IBM Plex Sans Arabic",serif' };
+
+  async function certFonts(){
+    const specs = ['700 74px "Aref Ruqaa"', '700 64px "Amiri"', '600 20px "Readex Pro"', '400 20px "Readex Pro"', '400 20px "IBM Plex Sans Arabic"', '500 20px "IBM Plex Sans Arabic"'];
+    try{ await Promise.race([Promise.all(specs.map(f => document.fonts.load(f, 'شهادة 15'))), new Promise(r => setTimeout(r, 4000))]); }catch(e){}
+  }
+  // يرسم الشهادة على لوحة بحجم A4 أفقي (1123×794 مضروبة في 2 للدقة)
+  function drawCertificate(d){
+    const W = 1123, H = 794, S = 2, cv = document.createElement('canvas');
+    cv.width = W * S; cv.height = H * S;
+    const x = cv.getContext('2d'); x.scale(S, S); x.direction = 'rtl'; x.textBaseline = 'middle';
+    const md = MEDAL[d.rank] || MEDAL.x;
+    // الخلفية والنقاط
+    x.fillStyle = C.paper; x.fillRect(0, 0, W, H);
+    x.fillStyle = 'rgba(198,154,44,.15)';
+    for(let i = 11; i < W; i += 22) for(let j = 11; j < H; j += 22){ x.beginPath(); x.arc(i, j, 1.1, 0, 7); x.fill(); }
+    // شريط العلم
+    x.fillStyle = C.red; x.fillRect(W - 96, 0, 96, H);
+    const g0 = x.createLinearGradient(W - 96, 0, W, 0); g0.addColorStop(0, 'rgba(0,0,0,.18)'); g0.addColorStop(.4, 'rgba(0,0,0,0)'); g0.addColorStop(1, 'rgba(255,255,255,.08)');
+    x.fillStyle = g0; x.fillRect(W - 96, 0, 96, H);
+    x.fillStyle = C.paper; x.beginPath(); x.moveTo(W - 97, 0);
+    const teeth = 10, th = H / teeth;
+    for(let k = 0; k < teeth; k++){ x.lineTo(W - 96 + 34, k * th + th / 2); x.lineTo(W - 96, (k + 1) * th); }
+    x.lineTo(W - 97, H); x.closePath(); x.fill();
+    // الإطار والزوايا
+    x.strokeStyle = C.gold; x.lineWidth = 2; x.strokeRect(27, 27, W - 142 - 27 - 1, H - 54);
+    x.strokeStyle = 'rgba(180,18,28,.45)'; x.lineWidth = 1; x.strokeRect(35.5, 35.5, W - 142 - 44, H - 71);
+    x.strokeStyle = C.gold; x.lineWidth = 4; x.lineCap = 'square';
+    const cr = (ax, ay, dx, dy) => { x.beginPath(); x.moveTo(ax, ay + dy * 44); x.lineTo(ax, ay); x.lineTo(ax + dx * 44, ay); x.stroke(); };
+    cr(16, 16, 1, 1); cr(W - 132, 16, -1, 1); cr(16, H - 16, 1, -1); cr(W - 132, H - 16, -1, -1);
+    // الرقم الباهت في الخلفية
+    x.save(); x.direction = 'ltr'; x.textAlign = 'left'; x.fillStyle = 'rgba(180,18,28,.045)'; x.font = `600 ${d.rank >= 10 ? 400 : 520}px ${F.hf}`;
+    x.fillText(String(d.rank), 150, H / 2 + 10); x.restore();
+    // الميدالية
+    const mx = 140, my = 122;
+    const ribbon = (bx, skew, col) => { x.fillStyle = col; x.beginPath(); x.moveTo(bx, 158); x.lineTo(bx + 44, 158); x.lineTo(bx + 44 + skew, 254); x.lineTo(bx + 22 + skew, 232); x.lineTo(bx + skew, 254); x.closePath(); x.fill(); };
+    ribbon(mx - 58, -14, md[3]); ribbon(mx + 14, 14, md[4]);
+    x.save(); x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 22; x.shadowOffsetY = 8;
+    const rg = x.createRadialGradient(mx - 20, my - 22, 4, mx, my, 62); rg.addColorStop(0, md[0]); rg.addColorStop(.55, md[1]); rg.addColorStop(1, md[2]);
+    x.fillStyle = rg; x.beginPath(); x.arc(mx, my, 60, 0, 7); x.fill(); x.restore();
+    x.strokeStyle = 'rgba(255,255,255,.35)'; x.lineWidth = 6; x.beginPath(); x.arc(mx, my, 57, 0, 7); x.stroke();
+    x.strokeStyle = 'rgba(255,255,255,.7)'; x.lineWidth = 2; x.setLineDash([6, 5]); x.beginPath(); x.arc(mx, my, 46, 0, 7); x.stroke(); x.setLineDash([]);
+    x.save(); x.direction = 'ltr'; x.textAlign = 'center'; x.fillStyle = '#fff'; x.shadowColor = 'rgba(0,0,0,.25)'; x.shadowBlur = 6; x.shadowOffsetY = 2;
+    x.font = `600 ${d.rank >= 10 ? 46 : 58}px ${F.hf}`; x.fillText(String(d.rank), mx, my + 2); x.restore();
+    // النصوص
+    const cx = 506.5;
+    const text = (t, y, font, color, align = 'center', px = cx) => { x.font = font; x.fillStyle = color; x.textAlign = align; x.fillText(t, px, y); };
+    const runs = (parts, y) => { // سطر بأجزاء ملوّنة مختلفة، من اليمين لليسار
+      let tot = 0; parts.forEach(p => { x.font = p.f; p.w = x.measureText(p.t).width; tot += p.w; });
+      let px = cx + tot / 2; parts.forEach(p => { x.font = p.f; x.fillStyle = p.c; x.textAlign = 'right'; x.fillText(p.t, px, y); px -= p.w; });
+    };
+    runs([{ t:'مملكة البحرين', f:`600 15px ${F.hf}`, c:C.ink }, { t:'   •   ', f:`600 15px ${F.hf}`, c:C.gold }, { t:'مدرسة عثمان بن عفان الابتدائية الإعدادية للبنين', f:`400 15px ${F.hf}`, c:C.muted }], 69);
+    text('مجلس الطلبة', 93, `600 14px ${F.hf}`, C.red);
+    text('شهادة شكر وتقدير', 168, `700 74px ${F.title}`, C.red);
+    const og = x.createLinearGradient(cx - 125, 0, cx - 15, 0); og.addColorStop(0, 'rgba(198,154,44,0)'); og.addColorStop(1, C.gold);
+    x.fillStyle = og; x.fillRect(cx - 125, 208, 110, 2);
+    const og2 = x.createLinearGradient(cx + 125, 0, cx + 15, 0); og2.addColorStop(0, 'rgba(198,154,44,0)'); og2.addColorStop(1, C.gold);
+    x.fillStyle = og2; x.fillRect(cx + 15, 208, 110, 2);
+    x.save(); x.translate(cx, 209); x.rotate(Math.PI / 4); x.fillStyle = C.gold; x.fillRect(-5, -5, 10, 10); x.restore();
+    text('يتقدّم مجلس الطلبة بخالص الشكر والتقدير إلى الطالب', 254, `400 21px ${F.bf}`, C.muted);
+    let nf = 64; x.font = `700 ${nf}px ${F.name}`; while(x.measureText(d.name).width > 640 && nf > 36){ nf -= 2; x.font = `700 ${nf}px ${F.name}`; }
+    text(d.name, 318, `700 ${nf}px ${F.name}`, C.ink);
+    const ng = x.createLinearGradient(cx - 210, 0, cx + 210, 0); ng.addColorStop(0, 'rgba(198,154,44,0)'); ng.addColorStop(.2, C.gold); ng.addColorStop(.8, C.gold); ng.addColorStop(1, 'rgba(198,154,44,0)');
+    x.fillStyle = ng; x.fillRect(cx - 210, 362, 420, 3);
+    runs([{ t:'من صف ', f:`400 19px ${F.bf}`, c:C.ink }, { t:d.cls, f:`600 19px ${F.hf}`, c:C.red }], 393);
+    runs([{ t:'وذلك لحصوله على ', f:`400 22px ${F.bf}`, c:C.ink }, { t:'المركز ' + (ORD[d.rank] || d.rank), f:`600 22px ${F.hf}`, c:C.red }, { t:' في الاختبار الوطني التجريبي', f:`400 22px ${F.bf}`, c:C.ink }], 445);
+    runs([{ t:'بدرجة ', f:`400 22px ${F.bf}`, c:C.ink }, { t:`${d.score} من ${d.total}`, f:`600 22px ${F.hf}`, c:C.ink }, { t:'، تقديراً لتميّزه واجتهاده.', f:`400 22px ${F.bf}`, c:C.ink }], 483);
+    text('متمنّين له دوام التفوّق والنجاح', 525, `400 18px ${F.bf}`, C.muted);
+    x.font = `400 14px ${F.hf}`; const it = 'حُرّرت في ' + d.date, iw = x.measureText(it).width;
+    text(it, 569, `400 14px ${F.hf}`, C.muted);
+    x.fillStyle = C.gold; x.fillRect(cx - iw / 2 - 48, 569, 34, 1); x.fillRect(cx + iw / 2 + 14, 569, 34, 1);
+    // التوقيعات
+    [[807, 'رئيس مجلس الطلبة', 'يحيى حميد'], [506, 'مرشد مجلس الطلبة', 'أ. جعفر عتيق'], [206, 'مدير المدرسة', 'أ. عبدالرحمن التميمي']].forEach(([sx, role, who]) => {
+      x.strokeStyle = 'rgba(30,20,21,.35)'; x.lineWidth = 1.5; x.setLineDash([4, 3]); x.beginPath(); x.moveTo(sx - 85, 683); x.lineTo(sx + 85, 683); x.stroke(); x.setLineDash([]);
+      text(role, 704, `400 13px ${F.bf}`, C.muted, 'center', sx);
+      text(who, 727, `600 15px ${F.hf}`, C.ink, 'center', sx);
+    });
+    x.save(); x.direction = 'ltr'; text(d.serial, 744, `400 11px ${F.hf}`, 'rgba(107,93,94,.75)', 'right', 962); x.restore();
+    return cv;
+  }
+  let jspdfP = null;
+  function loadJsPDF(){
+    if(window.jspdf) return Promise.resolve(window.jspdf);
+    if(!jspdfP) jspdfP = new Promise((res, rej) => {
+      const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      sc.onload = () => window.jspdf ? res(window.jspdf) : rej(new Error('jspdf')); sc.onerror = () => { jspdfP = null; rej(new Error('jspdf')); };
+      document.head.appendChild(sc);
+    });
+    return jspdfP;
+  }
+  function saveBlob(blob, name){
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  async function downloadCertificate(row){
+    await certFonts();
+    const now = new Date();
+    let h = 0; for(const ch of (row.name + row.cls)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    const d = {
+      name: row.name, cls: row.cls, rank: row.rank, score: row.score, total: N,
+      date: now.toLocaleDateString('ar-BH-u-nu-latn', { day:'numeric', month:'long', year:'numeric' }),
+      serial: `NE-${now.getFullYear()}-${String(row.rank).padStart(2, '0')}${(h % 10000).toString().padStart(4, '0')}`
+    };
+    const cv = drawCertificate(d);
+    const base = `شهادة-المركز-${row.rank}-${row.name.replace(/\s+/g, '-')}`;
+    try{
+      const { jsPDF } = await loadJsPDF();
+      const pdf = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+      pdf.addImage(cv.toDataURL('image/jpeg', .95), 'JPEG', 0, 0, 297, 210);
+      saveBlob(pdf.output('blob'), base + '.pdf');
+    }catch(e){
+      // إن تعذّر تحميل مكتبة PDF، تُنزَّل الشهادة صورةً بدلاً منه
+      cv.toBlob(b => saveBlob(b, base + '.png'), 'image/png');
+    }
+  }
+  $('leader').addEventListener('click', async e => {
+    const b = e.target.closest('[data-cert]'); if(!b || !DATA) return;
+    const row = rankList(rowsF()).find(r => (r.id || (r.name + '|' + r.cls)) === b.dataset.cert); if(!row) return;
+    const html = b.innerHTML; b.disabled = true; b.innerHTML = '<span class="spin"></span>';
+    try{ await downloadCertificate(row); toast('تم تنزيل شهادة ' + row.name); }
+    catch(err){ toast('تعذّر إنشاء الشهادة'); }
+    finally{ b.disabled = false; b.innerHTML = html; }
+  });
 
   // ---------- events ----------
   $('pass-sel').innerHTML = Array.from({length:N},(_,i)=>i+1).map(v=>`<option value="${v}" ${v===passMark?'selected':''}>${v} من ${N} (${pct(v,N)}%)</option>`).join('');
